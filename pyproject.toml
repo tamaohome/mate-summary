@@ -1,0 +1,50 @@
+[project]
+name = "mate-summary"
+version = "0.1.0"
+description = "JIP-まてりある総括表変換ツール"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = ["anytree>=2.13.0", "openpyxl>=3.1.5", "pyside6>=6.10.0"]
+
+[dependency-groups]
+dev = [
+    "pyinstaller>=6.16.0",
+    "pytest>=8.4.2",
+    "pytest-watcher>=0.4.3",
+    "ruff>=0.14.3",
+]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 120
+
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle エラー (Errors)
+    "W",   # pycodestyle 警告 (Warnings)
+    "F",   # Pyflakes (未使用のインポートや変数の検出)
+    "I",   # isort (インポートのソート)
+    "B",   # flake8-bugbear (バグの可能性が高いコードパターン)
+    "C4",  # flake8-comprehensions (冗長なリスト内包表記など)
+    "ISC", # flake8-implicit-str-concat (暗黙的な文字列結合)
+    "N",   # pep8-naming (命名規則)
+    "UP",  # pyupgrade (不要な互換性のあるコードを検出)
+]
+
+ignore = [
+    "N803", # invalid-argument-name (Qt CamelCase対応)
+    "N813", # Camelcase imported as lowercase (Qt imports)
+    "N815", # variable-in-mixed-case (Qt properties/signals対応)
+    "N802", # invalid-function-name (Qt method names)
+    "N806", # variable-in-function-scope (Qt変数命名)
+    "E501", # line-too-long (GUI文字列長制限)
+]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "-v --strict-markers"

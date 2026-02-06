@@ -1,0 +1,23 @@
+# Python-generated files
+__pycache__/
+.pytest_cache/
+*.py[oc]
+
+# Virtual environments
+.venv
+
+# pyinstaller
+build/
+dist/
+
+# output files
+*.ini
+~$*.xl*
+*.xlsx
+*.csv
+!tests/**/*.xlsx
+!tests/**/*.csv
+
+# JIP-MATERIAL
+*.zfo
+*.log
