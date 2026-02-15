@@ -93,10 +93,6 @@ class SummaryTableParser:
 
     def _parse_item_props(self, col: SummaryColumn, index: int) -> dict[str, str]:
         props: dict[str, str] = {}
-        from pprint import pprint
-
-        # pprint(col.parent.header_cols, width=200)
-        pprint(f"{index=}")
         props["材質"] = col.parent.header_cols["材質"][index]
         props["形状"] = col.parent.header_cols["形状"][index]
         props["寸法"] = col.parent.header_cols["寸法"][index]
