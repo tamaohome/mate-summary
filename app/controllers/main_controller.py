@@ -85,6 +85,14 @@ class MainController(QObject):
                 item = QTableWidgetItem(str(value))
                 table.setItem(r, c, item)
 
+    def set_initial_path(self, filepath: str) -> None:
+        """外部から初期ファイルパスを設定する"""
+        try:
+            self.main_window.fileSelector.filepath = filepath
+            logger.info("初期パスを設定しました: %s", filepath)
+        except Exception:
+            logger.exception("初期パスの適用に失敗しました: %s", filepath)
+
     @property
     def filepath(self) -> QFileInfo:
         return self.main_window.fileSelector.filepath

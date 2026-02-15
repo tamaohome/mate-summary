@@ -20,13 +20,13 @@ def main(argv: Sequence[str] | None = None) -> int:
     try:
         app = QApplication(sys.argv)
         window = MainWindow()
-        _controller = MainController(window)
+        controller = MainController(window)
         window.show()
 
         # コマンドライン引数が存在する場合、ファイルパスとして読み込む
         if argv:
             try:
-                window.fileSelector.filepath = argv[0]
+                controller.set_initial_path(argv[0])
             except Exception:
                 logger.exception("コマンドライン引数で渡されたパスの設定に失敗しました: %s", argv[0])
         window.show()
