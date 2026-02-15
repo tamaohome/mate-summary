@@ -5,7 +5,7 @@ from typing import Final
 
 from anytree import NodeMixin, RenderTree
 
-from app.models.csv_data import CSVData
+from app.models.csv_data import CSVData, CSVDataType
 
 
 class SummaryTable(NodeMixin):
@@ -49,22 +49,25 @@ class SummaryTable(NodeMixin):
 
     def to_csvdata(self) -> CSVData:
         """`SummaryTable` を `CSVData` 形式に変換して返す"""
-        rows: list[list[str]] = []
+        cols: CSVDataType = []
 
-        # ヘッダー行を構築
-        # header_colsの各エントリを行に変換
+        # ヘッダー列を構築
+        # header_colsの各エントリを列に変換
         for header_name, header_values in self.header_cols.items():
-            rows.append([header_name] + header_values)
+            cols.append([header_name] + header_values)
 
-        # データ行を構築
+        # データ列を構築
         # 各SummaryColumnとその配下のSummaryItemを処理
         for col in self.cols:
             row = [col.name]
             for item in col.items:
                 row.append(item.value)
-            rows.append(row)
+            cols.append(row)
 
-        # ステップ3: CSVDataオブジェクトを生成して返す
+        # 行列変換
+        rows = [list(row) for row in zip(*cols, strict=False)]
+
+        # CSVDataオブジェクトを生成して返す
         return CSVData(rows)
 
 
