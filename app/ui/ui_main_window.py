@@ -15,8 +15,9 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QMainWindow, QMenuBar, QSizePolicy,
-    QSpacerItem, QStatusBar, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QHeaderView, QMainWindow, QMenuBar,
+    QSizePolicy, QStatusBar, QTabWidget, QTableWidget,
+    QTableWidgetItem, QVBoxLayout, QWidget)
 
 from app.views.components.file_selector import FileSelector
 
@@ -25,6 +26,8 @@ class Ui_MainWindow(object):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.resize(640, 360)
+        MainWindow.setDocumentMode(True)
+        MainWindow.setTabShape(QTabWidget.TabShape.Rounded)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.centralLayout = QVBoxLayout(self.centralwidget)
@@ -40,9 +43,68 @@ class Ui_MainWindow(object):
 
         self.centralLayout.addWidget(self.fileSelector)
 
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.levelTabWidget = QTabWidget(self.centralwidget)
+        self.levelTabWidget.setObjectName(u"levelTabWidget")
+        self.levelTabWidget.setTabPosition(QTabWidget.TabPosition.South)
+        self.levelTabWidget.setTabShape(QTabWidget.TabShape.Triangular)
+        self.levelTabWidget.setDocumentMode(True)
+        self.level1Tab = QWidget()
+        self.level1Tab.setObjectName(u"level1Tab")
+        self.level1TabLayout = QVBoxLayout(self.level1Tab)
+        self.level1TabLayout.setObjectName(u"level1TabLayout")
+        self.level1TabLayout.setContentsMargins(0, 0, 0, 0)
+        self.level1TableWidget = QTableWidget(self.level1Tab)
+        self.level1TableWidget.setObjectName(u"level1TableWidget")
 
-        self.centralLayout.addItem(self.verticalSpacer)
+        self.level1TabLayout.addWidget(self.level1TableWidget)
+
+        self.levelTabWidget.addTab(self.level1Tab, "")
+        self.level2Tab = QWidget()
+        self.level2Tab.setObjectName(u"level2Tab")
+        self.level2TabLayout = QVBoxLayout(self.level2Tab)
+        self.level2TabLayout.setObjectName(u"level2TabLayout")
+        self.level2TabLayout.setContentsMargins(0, 0, 0, 0)
+        self.level2TableWidget = QTableWidget(self.level2Tab)
+        self.level2TableWidget.setObjectName(u"level2TableWidget")
+
+        self.level2TabLayout.addWidget(self.level2TableWidget)
+
+        self.levelTabWidget.addTab(self.level2Tab, "")
+        self.level3Tab = QWidget()
+        self.level3Tab.setObjectName(u"level3Tab")
+        self.level3TabLayout = QVBoxLayout(self.level3Tab)
+        self.level3TabLayout.setObjectName(u"level3TabLayout")
+        self.level3TabLayout.setContentsMargins(0, 0, 0, 0)
+        self.level3TableWidget = QTableWidget(self.level3Tab)
+        self.level3TableWidget.setObjectName(u"level3TableWidget")
+
+        self.level3TabLayout.addWidget(self.level3TableWidget)
+
+        self.levelTabWidget.addTab(self.level3Tab, "")
+        self.level4Tab = QWidget()
+        self.level4Tab.setObjectName(u"level4Tab")
+        self.level4TabLayout = QVBoxLayout(self.level4Tab)
+        self.level4TabLayout.setObjectName(u"level4TabLayout")
+        self.level4TabLayout.setContentsMargins(0, 0, 0, 0)
+        self.level4TableWidget = QTableWidget(self.level4Tab)
+        self.level4TableWidget.setObjectName(u"level4TableWidget")
+
+        self.level4TabLayout.addWidget(self.level4TableWidget)
+
+        self.levelTabWidget.addTab(self.level4Tab, "")
+        self.level5Tab = QWidget()
+        self.level5Tab.setObjectName(u"level5Tab")
+        self.level5TabLayout = QVBoxLayout(self.level5Tab)
+        self.level5TabLayout.setObjectName(u"level5TabLayout")
+        self.level5TabLayout.setContentsMargins(0, 0, 0, 0)
+        self.level5TableWidget = QTableWidget(self.level5Tab)
+        self.level5TableWidget.setObjectName(u"level5TableWidget")
+
+        self.level5TabLayout.addWidget(self.level5TableWidget)
+
+        self.levelTabWidget.addTab(self.level5Tab, "")
+
+        self.centralLayout.addWidget(self.levelTabWidget)
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
@@ -55,10 +117,18 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
+        self.levelTabWidget.setCurrentIndex(0)
+
+
         QMetaObject.connectSlotsByName(MainWindow)
     # setupUi
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
+        self.levelTabWidget.setTabText(self.levelTabWidget.indexOf(self.level1Tab), QCoreApplication.translate("MainWindow", u"#1\u30ec\u30d9\u30eb", None))
+        self.levelTabWidget.setTabText(self.levelTabWidget.indexOf(self.level2Tab), QCoreApplication.translate("MainWindow", u"#2\u30ec\u30d9\u30eb", None))
+        self.levelTabWidget.setTabText(self.levelTabWidget.indexOf(self.level3Tab), QCoreApplication.translate("MainWindow", u"#3\u30ec\u30d9\u30eb", None))
+        self.levelTabWidget.setTabText(self.levelTabWidget.indexOf(self.level4Tab), QCoreApplication.translate("MainWindow", u"#4\u30ec\u30d9\u30eb", None))
+        self.levelTabWidget.setTabText(self.levelTabWidget.indexOf(self.level5Tab), QCoreApplication.translate("MainWindow", u"#5\u30ec\u30d9\u30eb", None))
     # retranslateUi
 

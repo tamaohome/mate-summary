@@ -6,6 +6,7 @@ from collections.abc import Sequence
 
 from PySide6.QtWidgets import QApplication
 
+from app.controllers.main_controller import MainController
 from app.views.main_window import MainWindow
 
 logger = logging.getLogger(__name__)
@@ -19,9 +20,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     try:
         app = QApplication(sys.argv)
         window = MainWindow()
+        _controller = MainController(window)
         window.show()
-        return_value = app.exec()
-        return int(return_value)
+        return app.exec()
     except Exception as exc:
         logger.exception("アプリケーションの起動に失敗しました: %s", exc)
         return 1

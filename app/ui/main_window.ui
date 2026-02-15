@@ -13,6 +13,12 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="documentMode">
+   <bool>true</bool>
+  </property>
+  <property name="tabShape">
+   <enum>QTabWidget::TabShape::Rounded</enum>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="centralLayout">
     <item>
@@ -32,17 +38,130 @@
      </widget>
     </item>
     <item>
-     <spacer name="verticalSpacer">
-      <property name="orientation">
-       <enum>Qt::Orientation::Vertical</enum>
+     <widget class="QTabWidget" name="levelTabWidget">
+      <property name="tabPosition">
+       <enum>QTabWidget::TabPosition::South</enum>
       </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>40</height>
-       </size>
+      <property name="tabShape">
+       <enum>QTabWidget::TabShape::Triangular</enum>
       </property>
-     </spacer>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <property name="documentMode">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="level1Tab">
+       <attribute name="title">
+        <string>#1レベル</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="level1TabLayout">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QTableWidget" name="level1TableWidget"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="level2Tab">
+       <attribute name="title">
+        <string>#2レベル</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="level2TabLayout">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QTableWidget" name="level2TableWidget"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="level3Tab">
+       <attribute name="title">
+        <string>#3レベル</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="level3TabLayout">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QTableWidget" name="level3TableWidget"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="level4Tab">
+       <attribute name="title">
+        <string>#4レベル</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="level4TabLayout">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QTableWidget" name="level4TableWidget"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="level5Tab">
+       <attribute name="title">
+        <string>#5レベル</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="level5TabLayout">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QTableWidget" name="level5TableWidget"/>
+        </item>
+       </layout>
+      </widget>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -56,7 +175,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QStatusBar" name="statusbar" />
+  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <customwidgets>
   <customwidget>
@@ -66,6 +185,6 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources />
- <connections />
+ <resources/>
+ <connections/>
 </ui>

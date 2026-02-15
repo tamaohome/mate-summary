@@ -19,22 +19,21 @@ class FileSelector(QWidget, Ui_FileSelector):
 
     def _on_browse_clicked(self) -> None:
         """ファイル選択ダイアログを表示し、結果を反映させる"""
-        filepath, _ = QFileDialog.getOpenFileName(self, "ファイルを選択", "", "All Files (*)")
-        if filepath:
-            self.path = filepath
+        fp, _ = QFileDialog.getOpenFileName(self, "ファイルを選択", "", "CSV Files (*.csv)")
+        if fp:
+            self.filepath = fp
 
     @property
-    def path(self) -> QFileInfo:
+    def filepath(self) -> QFileInfo:
         """選択中のパスを返す"""
         return QFileInfo(self.pathLineEdit.text())
 
-    @path.setter
-    def path(self, value: QFileInfo | str) -> None:
+    @filepath.setter
+    def filepath(self, value: QFileInfo | str) -> None:
         """パスを設定し、外部へシグナルを通知する"""
-        fi = value if isinstance(value, QFileInfo) else QFileInfo(str(value))
+        fi = value if isinstance(value, QFileInfo) else QFileInfo(value)
         filepath = fi.filePath()
         # 変更がない場合はシグナルを発行しない
         if self.pathLineEdit.text() == filepath:
             return
         self.pathLineEdit.setText(filepath)
-        self.pathChanged.emit(filepath)

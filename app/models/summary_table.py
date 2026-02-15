@@ -16,12 +16,6 @@ class SummaryTable(NodeMixin):
         self.level: Final = level
         self.header_cols: Final[dict[str, list[str]]] = {}
 
-    # def __add__(self, other_table: "SummaryTable") -> "SummaryTable":
-    #     if not isinstance(other_table, SummaryTable):
-    #         return NotImplemented
-    #     for col in other_table:
-    #     return self
-
     def __iadd__(self, other_table) -> SummaryTable:
         if not isinstance(other_table, SummaryTable):
             return NotImplemented
