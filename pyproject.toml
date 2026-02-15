@@ -58,4 +58,4 @@ ignore = [
 minversion = "8.0"
 pythonpath = ["."]
 testpaths = ["tests"]
-addopts = "-v --strict-markers"
+addopts = "-v -s --strict-markers"
