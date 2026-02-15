@@ -26,3 +26,7 @@ class CSVData(Sequence[CSVRowType]):
     def _cols_to_rows(self, cols: CSVDataType) -> CSVDataType:
         rows: CSVDataType = [list(row) for row in zip(*cols, strict=False)]
         return rows
+
+    @property
+    def header(self) -> CSVRowType:
+        return self.rows[0]

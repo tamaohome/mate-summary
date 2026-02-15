@@ -36,7 +36,6 @@ def test_SummaryTableのヘッダー列(summary_tables: list[SummaryTable]):
 
 def test_SummaryTableの列数(summary_tables: list[SummaryTable]):
     table = summary_tables[1]
-    print(table)
     assert len(table.cols) == 1
 
 
