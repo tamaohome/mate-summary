@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 from pathlib import Path
 
-from PySide6.QtCore import QFileInfo, QObject, Slot
+from PySide6.QtCore import QFileInfo, QObject, Qt, Slot
 from PySide6.QtWidgets import QTableWidget, QTableWidgetItem
 
 from app.core.summary_table_parser import SummaryTableParser
@@ -80,6 +80,10 @@ class MainController(QObject):
         for r, row in enumerate(csv_data.data):
             for c, value in enumerate(row):
                 item = QTableWidgetItem(str(value))
+                # 5列目以降（インデックス4以上）は右揃えにする
+                if c >= 4:
+                    alignment = Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter
+                    item.setTextAlignment(alignment)
                 table.setItem(r, c, item)
 
     def set_initial_path(self, filepath: str) -> None:
