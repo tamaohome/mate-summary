@@ -22,6 +22,15 @@ def main(argv: Sequence[str] | None = None) -> int:
         window = MainWindow()
         _controller = MainController(window)
         window.show()
+
+        # コマンドライン引数が存在する場合、ファイルパスとして読み込む
+        if argv:
+            try:
+                window.fileSelector.filepath = argv[0]
+            except Exception:
+                logger.exception("コマンドライン引数で渡されたパスの設定に失敗しました: %s", argv[0])
+        window.show()
+
         return app.exec()
     except Exception as exc:
         logger.exception("アプリケーションの起動に失敗しました: %s", exc)
