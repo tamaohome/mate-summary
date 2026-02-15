@@ -29,4 +29,14 @@ class CSVData(Sequence[CSVRowType]):
 
     @property
     def header(self) -> CSVRowType:
+        """CSVデータのヘッダー"""
+        if not self.rows:
+            return []
         return self.rows[0]
+
+    @property
+    def data(self) -> CSVDataType:
+        """CSVデータの内容 (ヘッダーを除く)"""
+        if not self.rows:
+            return []
+        return self.rows[1:]

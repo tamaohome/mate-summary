@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 from pathlib import Path
 
-from PySide6.QtCore import QFileInfo, QObject, Slot
+from PySide6.QtCore import QFileInfo, QObject, Qt, Slot
 from PySide6.QtWidgets import QTableWidget, QTableWidgetItem
 
 from app.core.summary_table_parser import SummaryTableParser
@@ -54,9 +54,6 @@ class MainController(QObject):
     def _init_table_widget(self, level: int) -> None:
         """テーブルを初期化"""
         table = self._get_table_widget(level)
-        table.setColumnCount(5)
-        header = [f"#{level}レベル名", "材質", "形状", "寸法", "合計"]
-        table.setHorizontalHeaderLabels(header)
         table.setRowCount(0)
 
     @Slot(str)
@@ -77,11 +74,16 @@ class MainController(QObject):
     def _populate_table(self, level: int, csv_data: CSVData) -> None:
         """指定されたレベルのテーブルにデータをセットする"""
         table = self._get_table_widget(level)
-        # Sequence なので長さを事前に設定して直接書き込む
+        table.setColumnCount(len(csv_data.header))
+        table.setHorizontalHeaderLabels(csv_data.header)
         table.setRowCount(len(csv_data))
-        for r, row in enumerate(csv_data):
+        for r, row in enumerate(csv_data.data):
             for c, value in enumerate(row):
                 item = QTableWidgetItem(str(value))
+                # 5列目以降（インデックス4以上）は右揃えにする
+                if c >= 4:
+                    alignment = Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter
+                    item.setTextAlignment(alignment)
                 table.setItem(r, c, item)
 
     def set_initial_path(self, filepath: str) -> None:

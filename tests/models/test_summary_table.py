@@ -14,9 +14,11 @@ def test_SummaryTableの読み込み(summary_tables: list[SummaryTable]):
         _ = summary_tables[5]
 
 
-def test_SummaryTableの内容(summary_tables: list[SummaryTable]):
+def test_SummaryTableの名称(summary_tables: list[SummaryTable]):
     assert summary_tables[1].name == "#1レベル名"
     assert summary_tables[2].name == "#2レベル名"
+    assert summary_tables[3].name == "#3レベル名"
+    assert summary_tables[4].name == "#4レベル名"
 
 
 def test_SummaryTableのヘッダー列(summary_tables: list[SummaryTable]):
@@ -32,6 +34,19 @@ def test_SummaryTableのヘッダー列(summary_tables: list[SummaryTable]):
     assert len(table.header_cols["形状"]) == 20
     assert len(table.header_cols["寸法"]) == 20
     assert len(table.header_cols["合計"]) == 20
+
+
+def test_SummaryTableをCSVDataに変換(summary_tables: list[SummaryTable]):
+    table = summary_tables[3]
+    csvdata = table.to_csvdata()
+
+    # ヘッダー行の内容をテスト
+    header = csvdata.rows[0]
+    header_names = ["#3レベル名", "材質", "形状", "寸法", "合計", "主桁", "横桁", "横構", "排水装置"]
+    assert header_names == header
+
+    # データ行の個数をテスト
+    assert all(len(header_names) == len(row) for row in csvdata.data)
 
 
 def test_SummaryTableの列数(summary_tables: list[SummaryTable]):
