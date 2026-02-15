@@ -92,17 +92,6 @@ class Ui_MainWindow(object):
         self.level4TabLayout.addWidget(self.level4TableWidget)
 
         self.levelTabWidget.addTab(self.level4Tab, "")
-        self.level5Tab = QWidget()
-        self.level5Tab.setObjectName(u"level5Tab")
-        self.level5TabLayout = QVBoxLayout(self.level5Tab)
-        self.level5TabLayout.setObjectName(u"level5TabLayout")
-        self.level5TabLayout.setContentsMargins(0, 0, 0, 0)
-        self.level5TableWidget = QTableWidget(self.level5Tab)
-        self.level5TableWidget.setObjectName(u"level5TableWidget")
-
-        self.level5TabLayout.addWidget(self.level5TableWidget)
-
-        self.levelTabWidget.addTab(self.level5Tab, "")
 
         self.centralLayout.addWidget(self.levelTabWidget)
 
@@ -129,6 +118,5 @@ class Ui_MainWindow(object):
         self.levelTabWidget.setTabText(self.levelTabWidget.indexOf(self.level2Tab), QCoreApplication.translate("MainWindow", u"#2\u30ec\u30d9\u30eb", None))
         self.levelTabWidget.setTabText(self.levelTabWidget.indexOf(self.level3Tab), QCoreApplication.translate("MainWindow", u"#3\u30ec\u30d9\u30eb", None))
         self.levelTabWidget.setTabText(self.levelTabWidget.indexOf(self.level4Tab), QCoreApplication.translate("MainWindow", u"#4\u30ec\u30d9\u30eb", None))
-        self.levelTabWidget.setTabText(self.levelTabWidget.indexOf(self.level5Tab), QCoreApplication.translate("MainWindow", u"#5\u30ec\u30d9\u30eb", None))
     # retranslateUi
 

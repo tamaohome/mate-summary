@@ -11,7 +11,7 @@ from app.models.csv_data import CSVData
 from app.models.summary_table import SummaryTable
 from app.views.main_window import MainWindow
 
-LEVELS = [1, 2, 3, 4, 5]
+LEVELS = [1, 2, 3, 4]
 logger = logging.getLogger(__name__)
 
 
@@ -44,7 +44,6 @@ class MainController(QObject):
             2: self.main_window.level2TableWidget,
             3: self.main_window.level3TableWidget,
             4: self.main_window.level4TableWidget,
-            5: self.main_window.level5TableWidget,
         }
         widget = mapping.get(level)
         if widget:

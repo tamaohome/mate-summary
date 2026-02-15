@@ -139,28 +139,6 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="level5Tab">
-       <attribute name="title">
-        <string>#5レベル</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="level5TabLayout">
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
-        <item>
-         <widget class="QTableWidget" name="level5TableWidget"/>
-        </item>
-       </layout>
-      </widget>
      </widget>
     </item>
    </layout>
