@@ -69,7 +69,11 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QTableWidget" name="level1TableWidget"/>
+         <widget class="QTableWidget" name="level1TableWidget">
+          <property name="editTriggers">
+           <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -91,7 +95,11 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QTableWidget" name="level2TableWidget"/>
+         <widget class="QTableWidget" name="level2TableWidget">
+          <property name="editTriggers">
+           <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -113,7 +121,11 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QTableWidget" name="level3TableWidget"/>
+         <widget class="QTableWidget" name="level3TableWidget">
+          <property name="editTriggers">
+           <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -135,7 +147,11 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QTableWidget" name="level4TableWidget"/>
+         <widget class="QTableWidget" name="level4TableWidget">
+          <property name="editTriggers">
+           <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>

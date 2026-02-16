@@ -15,9 +15,9 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QHeaderView, QMainWindow, QMenuBar,
-    QSizePolicy, QStatusBar, QTabWidget, QTableWidget,
-    QTableWidgetItem, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QAbstractItemView, QApplication, QHeaderView, QMainWindow,
+    QMenuBar, QSizePolicy, QStatusBar, QTabWidget,
+    QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget)
 
 from app.views.components.file_selector import FileSelector
 
@@ -55,6 +55,7 @@ class Ui_MainWindow(object):
         self.level1TabLayout.setContentsMargins(0, 0, 0, 0)
         self.level1TableWidget = QTableWidget(self.level1Tab)
         self.level1TableWidget.setObjectName(u"level1TableWidget")
+        self.level1TableWidget.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
 
         self.level1TabLayout.addWidget(self.level1TableWidget)
 
@@ -66,6 +67,7 @@ class Ui_MainWindow(object):
         self.level2TabLayout.setContentsMargins(0, 0, 0, 0)
         self.level2TableWidget = QTableWidget(self.level2Tab)
         self.level2TableWidget.setObjectName(u"level2TableWidget")
+        self.level2TableWidget.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
 
         self.level2TabLayout.addWidget(self.level2TableWidget)
 
@@ -77,6 +79,7 @@ class Ui_MainWindow(object):
         self.level3TabLayout.setContentsMargins(0, 0, 0, 0)
         self.level3TableWidget = QTableWidget(self.level3Tab)
         self.level3TableWidget.setObjectName(u"level3TableWidget")
+        self.level3TableWidget.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
 
         self.level3TabLayout.addWidget(self.level3TableWidget)
 
@@ -88,6 +91,7 @@ class Ui_MainWindow(object):
         self.level4TabLayout.setContentsMargins(0, 0, 0, 0)
         self.level4TableWidget = QTableWidget(self.level4Tab)
         self.level4TableWidget.setObjectName(u"level4TableWidget")
+        self.level4TableWidget.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
 
         self.level4TabLayout.addWidget(self.level4TableWidget)
 
