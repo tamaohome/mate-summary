@@ -70,6 +70,9 @@
         </property>
         <item>
          <widget class="QTableWidget" name="level1TableWidget">
+          <property name="styleSheet">
+           <string notr="true">QTableWidget::item:selected { background: #316AC5; }</string>
+          </property>
           <property name="editTriggers">
            <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
           </property>
@@ -96,6 +99,9 @@
         </property>
         <item>
          <widget class="QTableWidget" name="level2TableWidget">
+          <property name="styleSheet">
+           <string notr="true">QTableWidget::item:selected { background: #316AC5; }</string>
+          </property>
           <property name="editTriggers">
            <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
           </property>
@@ -122,6 +128,9 @@
         </property>
         <item>
          <widget class="QTableWidget" name="level3TableWidget">
+          <property name="styleSheet">
+           <string notr="true">QTableWidget::item:selected { background: #316AC5; }</string>
+          </property>
           <property name="editTriggers">
            <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
           </property>
@@ -148,6 +157,9 @@
         </property>
         <item>
          <widget class="QTableWidget" name="level4TableWidget">
+          <property name="styleSheet">
+           <string notr="true">QTableWidget::item:selected { background: #316AC5; }</string>
+          </property>
           <property name="editTriggers">
            <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
           </property>
