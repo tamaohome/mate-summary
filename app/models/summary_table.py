@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Iterator
-from typing import Final
+from typing import Final, overload
 
 from anytree import NodeMixin, RenderTree
 
@@ -26,6 +26,17 @@ class SummaryTable(NodeMixin):
 
     def __iter__(self) -> Iterator[SummaryColumn]:
         return iter(self.children)
+
+    @overload
+    def __getitem__(self, key: int) -> SummaryColumn: ...
+    @overload
+    def __getitem__(self, key: slice) -> tuple[SummaryColumn, ...]: ...
+    @overload
+    def __getitem__(self, key: str) -> list[str]: ...
+    def __getitem__(self, key: int | slice | str):
+        if isinstance(key, str):
+            return self.header_cols[key]
+        return self.cols[key]
 
     def __repr__(self) -> str:
         if not self.cols:

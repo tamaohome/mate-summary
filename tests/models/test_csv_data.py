@@ -1,11 +1,11 @@
 from app.models.csv_data import CSVData
 
 
-def test_CSVデータの読み込み(csv_data: CSVData):
+def test_CSVData_読み込み(csv_data: CSVData):
     assert isinstance(csv_data, CSVData)
 
 
-def test_CSVデータの行数および列数(csv_data: CSVData):
+def test_CSVData_行数および列数(csv_data: CSVData):
     # CSVデータの行数
     assert len(csv_data.rows) == 102
     # CSVデータの列数
@@ -14,7 +14,7 @@ def test_CSVデータの行数および列数(csv_data: CSVData):
     assert len(csv_data) == len(csv_data.rows)
 
 
-def test_CSVデータのヘッダー(csv_data: CSVData):
+def test_CSVData_ヘッダー(csv_data: CSVData):
     # CSVデータの列数はヘッダーの個数と同値
     assert len(csv_data.cols) == len(csv_data.header)
 
