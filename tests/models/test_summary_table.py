@@ -24,11 +24,9 @@ def test_SummaryTableの名称(summary_tables: list[SummaryTable]):
 def test_SummaryTableのヘッダー列(summary_tables: list[SummaryTable]):
     table = summary_tables[1]
     assert len(table.header_cols) == 5
-    assert "#1レベル名" in table.header_cols
-    assert "材質" in table.header_cols
-    assert "形状" in table.header_cols
-    assert "寸法" in table.header_cols
-    assert "合計" in table.header_cols
+
+    assert {"#1レベル名", "材質", "形状", "寸法", "合計"}.issubset(table.header_cols)
+
     assert len(table.header_cols["#1レベル名"]) == 20
     assert len(table.header_cols["材質"]) == 20
     assert len(table.header_cols["形状"]) == 20
