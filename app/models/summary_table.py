@@ -7,6 +7,8 @@ from anytree import NodeMixin, RenderTree
 
 from app.models.csv_data import CSVData, CSVDataType
 
+HEADER_COL_NAMES = ["材質", "形状", "寸法"]
+
 
 class SummaryTable(NodeMixin):
     """総括表クラス"""
@@ -14,7 +16,6 @@ class SummaryTable(NodeMixin):
     def __init__(self, name: str, level: int):
         self.name: Final = name
         self.level: Final = level
-        self.header_cols: Final[dict[str, list[str]]] = {}
 
     def __iadd__(self, other_table) -> SummaryTable:
         if not isinstance(other_table, SummaryTable):
@@ -45,7 +46,16 @@ class SummaryTable(NodeMixin):
 
     @property
     def cols(self) -> tuple[SummaryColumn]:
+        """総括表列"""
         return self.children
+
+    @property
+    def header_cols(self) -> dict[str, list[str]]:
+        """総括表ヘッダー列"""
+        result: dict[str, list[str]] = {}
+        for header_name in HEADER_COL_NAMES:
+            result[header_name] = [col[header_name] for col in self.cols]
+        return result
 
     def to_csvdata(self) -> CSVData:
         """`SummaryTable` を `CSVData` 形式に変換して返す"""
