@@ -92,8 +92,8 @@ class SummaryTableParser:
             SummaryItem(parent=parent, value=cell, props=props)
 
     def _parse_item_props(self, col: SummaryColumn, index: int) -> dict[str, str]:
-        props: dict[str, str] = {}
-        props["材質"] = col.parent.header_cols["材質"][index]
-        props["形状"] = col.parent.header_cols["形状"][index]
-        props["寸法"] = col.parent.header_cols["寸法"][index]
-        return props
+        return {
+            "材質": col.parent.header_cols["材質"][index],
+            "形状": col.parent.header_cols["形状"][index],
+            "寸法": col.parent.header_cols["寸法"][index],
+        }
