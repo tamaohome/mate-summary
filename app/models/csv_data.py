@@ -1,15 +1,17 @@
+from __future__ import annotations
+
 from collections.abc import Sequence
 from itertools import zip_longest
+from pathlib import Path
 from typing import Final
 
-type CSVDataType = list[CSVRowType]
-type CSVRowType = list[str]
+from app.io.csv_reader import CSVColType, CSVReader, CSVRowType
 
 
 class CSVData(Sequence[CSVRowType]):
     """CSVデータを格納するクラス"""
 
-    def __init__(self, rows: CSVDataType):
+    def __init__(self, rows: list[CSVRowType]):
         self.cols: Final = self._rows_to_cols(rows)
         self.rows: Final = self._cols_to_rows(self.cols)
 
@@ -19,12 +21,19 @@ class CSVData(Sequence[CSVRowType]):
     def __len__(self) -> int:
         return len(self.rows)
 
-    def _rows_to_cols(self, rows: CSVDataType) -> CSVDataType:
-        cols: CSVDataType = [list(col) for col in zip_longest(*rows, fillvalue="")]
+    @staticmethod
+    def load_from_csv_file(csv_path: str | Path) -> CSVData:
+        """CSVファイルからインスタンスを生成する"""
+        reader = CSVReader(csv_path)
+        rows = reader.load()
+        return CSVData(rows)
+
+    def _rows_to_cols(self, rows: list[CSVRowType]) -> list[CSVColType]:
+        cols: list[CSVColType] = [list(col) for col in zip_longest(*rows, fillvalue="")]
         return cols
 
-    def _cols_to_rows(self, cols: CSVDataType) -> CSVDataType:
-        rows: CSVDataType = [list(row) for row in zip(*cols, strict=False)]
+    def _cols_to_rows(self, cols: list[CSVColType]) -> list[CSVRowType]:
+        rows: list[CSVRowType] = [list(row) for row in zip(*cols, strict=False)]
         return rows
 
     @property
@@ -35,7 +44,7 @@ class CSVData(Sequence[CSVRowType]):
         return self.rows[0]
 
     @property
-    def data(self) -> CSVDataType:
+    def data(self) -> list[CSVRowType]:
         """CSVデータの内容 (ヘッダーを除く)"""
         if not self.rows:
             return []

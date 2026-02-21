@@ -5,7 +5,7 @@ from typing import Final, overload
 
 from anytree import NodeMixin, RenderTree
 
-from app.models.csv_data import CSVData, CSVDataType
+from app.models.csv_data import CSVColType, CSVData
 
 HEADER_COL_NAMES = ["材質", "形状", "寸法"]
 
@@ -70,7 +70,7 @@ class SummaryTable(NodeMixin):
 
     def to_csvdata(self) -> CSVData:
         """`SummaryTable` を `CSVData` 形式に変換して返す"""
-        cols: CSVDataType = []
+        cols: list[CSVColType] = []
 
         # ヘッダー列を構築
         # header_colsの各エントリを列に変換

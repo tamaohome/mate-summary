@@ -1,24 +1,28 @@
-import csv
 import tempfile
 from pathlib import Path
 
 import pytest
 
-from app.io.csv_handler import read_csv
-from app.models.csv_data import CSVData
-
-ENCODING = "shift-jis"
+from app.io import ENCODING
+from app.io.csv_reader import CSVReader, CSVRowType
 
 
-def test_CSVセルの読み込み():
-    def strip_cells(cells: list[str]) -> list[str]:
-        return [cell.strip() for cell in cells]
+@pytest.fixture(scope="module")
+def sample_csv_path() -> Path:
+    """サンプルCSVファイルへのパスを返すフィクスチャ"""
+    return Path("tests/data/sample.csv")
 
-    csv_path = Path("tests/data/sample.csv")
-    with csv_path.open("r", encoding=ENCODING) as f:
-        reader = csv.reader(f)
-        header = strip_cells(next(reader))
-        data = [strip_cells(cells) for cells in reader]
+
+@pytest.fixture(scope="module")
+def sample_csv_rows(sample_csv_path: Path) -> list[CSVRowType]:
+    """サンプルCSVファイルを基に読み込んだCSVデータを返すフィクスチャ"""
+    reader = CSVReader(sample_csv_path)
+    return reader.load()
+
+
+def test_CSVReader_セルの読み込み(sample_csv_rows: list[CSVRowType]):
+    header = sample_csv_rows[0]
+    data = sample_csv_rows[1:]
 
     assert header == ["id", "value", "note"]
     assert len(data) == 20
@@ -33,33 +37,23 @@ def test_CSVセルの読み込み():
     assert data[19][1] == "A1,B2"
 
 
-def test_CSVファイルの読み込み(sample_csv_path: Path) -> None:
-    csv_data = read_csv(sample_csv_path)
-    assert isinstance(csv_data, CSVData)
-
-
-def test_読み込まれたCSVDataの内容(sample_csv_path: Path) -> None:
-    csv_data = read_csv(sample_csv_path)
-    assert len(csv_data) > 0
-    assert csv_data[0][0] == "#1レベル名"
-
-
-def test_セルの空白削除() -> None:
+def test_CSVReader_セルの空白削除() -> None:
     # 空白を含むCSVを作成してテスト
-    with tempfile.NamedTemporaryFile(mode="w", encoding="shift_jis", suffix=".csv", delete=False) as f:
+    with tempfile.NamedTemporaryFile(mode="w", encoding=ENCODING, suffix=".csv", delete=False) as f:
         f.write(" test , value ")
         temp_path = Path(f.name)
 
     try:
-        csv_data = read_csv(temp_path)
-        assert csv_data[0][0] == "test"
-        assert csv_data[0][1] == "value"
+        reader = CSVReader(temp_path)
+        csv_rows = reader.load()
+        assert csv_rows[0][0] == "test"
+        assert csv_rows[0][1] == "value"
     finally:
         temp_path.unlink()
 
 
-def test_ファイルが見つからない場合() -> None:
+def test_CSVReader_ファイルが見つからない場合() -> None:
     """ファイルが見つからない場合にFileNotFoundErrorが発生"""
     non_existent_path = Path("tests/data/non_existent.csv")
     with pytest.raises(FileNotFoundError):
-        read_csv(non_existent_path)
+        _ = CSVReader(non_existent_path)
