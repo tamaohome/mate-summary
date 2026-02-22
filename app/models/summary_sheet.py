@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+from collections import defaultdict
 from collections.abc import Iterator
 from pathlib import Path
 from typing import Final, overload, override
@@ -19,6 +20,8 @@ class SummarySheet(NodeMixin):
 
     def __init__(self, csv_summary_data: CSVSummaryData):
         self._csv_summary_data: Final = csv_summary_data
+        self.cols_by_level: defaultdict[int, list[SummaryColumn]]
+        self.cols_by_level = defaultdict(list)
         self._parse_summary_columns()
 
     def __iter__(self) -> Iterator[SummaryColumn]:
@@ -50,14 +53,19 @@ class SummarySheet(NodeMixin):
         return super().children
 
     @property
+    @override
+    def descendants(self) -> tuple[SummaryColumn, ...]:
+        return super().descendants
+
+    @property
     def cols(self) -> tuple[SummaryColumn, ...]:
         """総括表列"""
-        return self.children
+        return self.descendants
 
     @property
     def columns(self) -> tuple[SummaryColumn, ...]:
         """総括表列"""
-        return self.children
+        return self.cols
 
     @property
     def header_cols(self) -> dict[str, list[str]]:
@@ -110,14 +118,20 @@ class SummarySheet(NodeMixin):
 class SummaryColumn(NodeMixin):
     """総括表の列クラス"""
 
-    def __init__(self, parent: SummarySheet, col: CSVColType, header_cols: list[CSVColType]):
-        self.parent: SummarySheet = parent
+    def __init__(self, summary_sheet: SummarySheet, col: CSVColType, header_cols: list[CSVColType]):
+        self.summary_sheet: Final = summary_sheet
         self._col = col
         self._header_cols = header_cols
         self.name: Final = self._get_name()
-        self.level = self._get_level()
-        self.level_name = self._get_level_name()
-        self._parse_summary_items()
+        self.level: Final = self._get_level()
+        self.level_name: Final = self._get_level_name()
+        self.items: Final = self._parse_summary_items()
+
+        # 親階層の更新
+        self.parent: Final = self._get_parent()
+
+        # レベル毎の辞書に自ノードを追加
+        self.summary_sheet.cols_by_level[self.level].append(self)
 
     def __getitem__(self, index):
         return self.children[index]
@@ -130,12 +144,8 @@ class SummaryColumn(NodeMixin):
         return f"SummaryColumn(name={self.name!r}, level_name={self.level_name!r}, items={items_count})"
 
     @property
-    def children(self) -> tuple[SummaryItem]:
+    def children(self) -> tuple[SummaryColumn, ...]:
         return super().children
-
-    @property
-    def items(self) -> tuple[SummaryItem]:
-        return self.children
 
     def _get_name(self) -> str:
         """CSV列データを基に列名を返す"""
@@ -160,8 +170,9 @@ class SummaryColumn(NodeMixin):
         # TODO: CSVColType -> CSVColumn(list) クラス定義
         return self._header_cols[0][1]
 
-    def _parse_summary_items(self) -> None:
+    def _parse_summary_items(self) -> tuple[SummaryItem, ...]:
         """総括表アイテムを生成する"""
+        items: list[SummaryItem] = []
         for i, cell in enumerate(self._col):
             header = [col[i] for col in self._header_cols]
             if _is_header_row(header):
@@ -169,12 +180,32 @@ class SummaryColumn(NodeMixin):
             if _is_subtotal_row(header):
                 continue
             props = SummaryProps(header)
-            SummaryItem(self, cell, props)
+            item = SummaryItem(self, cell, props)
+            items.append(item)
+        return tuple(items)
+
+    def _get_parent(self) -> SummaryColumn | SummarySheet:
+        """レベル名と一致するノードを走査し、親階層を返す"""
+        # 自ノードのレベルが1の場合、ルート階層
+        if self.level == 1:
+            return self.summary_sheet
+
+        # 親ノードの候補一覧を取得
+        parent_level = self.level - 1
+        parent_nodes = self.summary_sheet.cols_by_level[parent_level]
+        for parent_node in parent_nodes:
+            if self.level_name == parent_node.name:
+                return parent_node
+
+        # 親階層が存在しない場合エラー
+        raise ValueError(f"親階層が存在しません: {self.level_name} | {self.name}")
 
 
-class SummaryItem(NodeMixin):
-    def __init__(self, parent: SummaryColumn, value: str, props: dict[str, str]):
-        self.parent: SummaryColumn = parent
+class SummaryItem:
+    """総括表のアイテムクラス"""
+
+    def __init__(self, parent: SummaryColumn, value: str, props: SummaryProps):
+        self.parent: Final = parent
         self.value: Final = value
         self.props: Final = props
 
