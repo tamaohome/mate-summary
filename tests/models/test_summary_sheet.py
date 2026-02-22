@@ -57,3 +57,13 @@ def test_SummaryColumn_階層関係を基に総括表列を取得(summary_sheet:
     assert grandchild_cols[0].name == "主桁"
     assert grandchild_cols[1].name == "横桁"
     assert grandchild_cols[2].name == "横構"
+
+
+def test_SummaryProps_等価性のチェック(summary_sheet: SummarySheet):
+    item_1 = summary_sheet.descendants[0].items[0]  # SMA490BW, PL, 19.0
+    item_2 = summary_sheet.descendants[1].items[0]  # SMA490BW, PL, 19.0
+    item_3 = summary_sheet.descendants[1].items[1]  # SMA490AW, PL, 16.0
+
+    assert item_1.props == item_2.props
+    assert item_1.props != item_3.props
+
