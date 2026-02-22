@@ -5,20 +5,21 @@ from typing import Final, overload
 
 from anytree import NodeMixin, RenderTree
 
+from app.io.csv_reader import CSVRowType
 from app.models.csv_data import CSVColType, CSVData
 
 HEADER_COL_NAMES = ["材質", "形状", "寸法"]
 
 
-class SummaryTable(NodeMixin):
+class SummarySheet(NodeMixin):
     """総括表クラス"""
 
     def __init__(self, name: str, level: int):
         self.name: Final = name
         self.level: Final = level
 
-    def __iadd__(self, other_table) -> SummaryTable:
-        if not isinstance(other_table, SummaryTable):
+    def __iadd__(self, other_table) -> SummarySheet:
+        if not isinstance(other_table, SummarySheet):
             return NotImplemented
         for col in other_table:
             col.parent = self
@@ -86,7 +87,9 @@ class SummaryTable(NodeMixin):
             cols.append(row)
 
         # 行列変換
-        rows = [list(row) for row in zip(*cols, strict=False)]
+        rows: list[CSVRowType] = []
+        for row in zip(*cols, strict=False):
+            rows.append(row)
 
         # CSVDataオブジェクトを生成して返す
         return CSVData(rows)
@@ -95,8 +98,8 @@ class SummaryTable(NodeMixin):
 class SummaryColumn(NodeMixin):
     """総括表の列クラス"""
 
-    def __init__(self, parent: SummaryTable, name: str, parent_name: str):
-        self.parent: SummaryTable = parent
+    def __init__(self, parent: SummarySheet, name: str, parent_name: str):
+        self.parent: SummarySheet = parent
         self.name: Final = name
         self.parent_name: Final = parent_name
 
