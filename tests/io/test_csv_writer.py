@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 
 from app.io.csv_handler import write_csv
-from app.models.summary_table import SummarySheet
+from app.models.summary_sheet import SummarySheet
 
 
 @pytest.mark.skip
