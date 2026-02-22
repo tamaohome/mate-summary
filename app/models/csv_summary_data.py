@@ -3,14 +3,14 @@ from __future__ import annotations
 from collections.abc import Iterator
 from pathlib import Path
 
-from app.io.csv_reader import CSVReader, CSVRowType
+from app.io.csv_reader import CSVReader, CSVRow
 from app.models.csv_data import CSVData
 
 
 class CSVSummaryData(CSVData):
     """CSV総括表データを格納するクラス"""
 
-    def __init__(self, rows: list[CSVRowType]):
+    def __init__(self, rows: list[CSVRow]):
         super().__init__(rows)
         self.sheets = self._parse_sheets()
 
@@ -27,7 +27,7 @@ class CSVSummaryData(CSVData):
         return list(csv_sheets)
 
     def _split_sheets_by_level(self) -> Iterator[CSVData]:
-        current_rows: list[CSVRowType] = []
+        current_rows: list[CSVRow] = []
         for row in self.rows:
             # 新しいシートを生成
             if is_header_row(row) and current_rows:
@@ -40,7 +40,7 @@ class CSVSummaryData(CSVData):
             yield CSVData(current_rows)
 
 
-def is_header_row(csv_row: CSVRowType) -> bool:
+def is_header_row(csv_row: CSVRow) -> bool:
     """ヘッダー行の場合 `True` を返す"""
     if csv_row[0].endswith("レベル名"):
         return True

@@ -1,13 +1,17 @@
 import csv
-from collections.abc import Sequence
 from pathlib import Path
 from typing import override
 
 from app.io import ENCODING
 from app.io.file_reader import BaseFileReader
 
-type CSVRowType = Sequence[str]
-type CSVColType = Sequence[str]
+
+class CSVRow(list[str]):
+    """CSV行クラス"""
+
+
+class CSVColumn(list[str]):
+    """CSV列クラス"""
 
 
 class CSVReader(BaseFileReader):
@@ -16,25 +20,26 @@ class CSVReader(BaseFileReader):
     def __init__(self, csv_path: str | Path):
         super().__init__(csv_path)
 
-    def load(self) -> list[CSVRowType]:
+    def load(self) -> list[CSVRow]:
         """CSVファイルを読み込んで検証する"""
-        csv_data: list[CSVRowType] = []
+        csv_data: list[CSVRow] = []
         with self.csv_path.open("r", encoding=ENCODING) as csv_file:
             reader = csv.reader(csv_file)
             for row in reader:
-                csv_data.append(self._strip_cells(row))
+                csv_row = CSVRow(row)
+                csv_data.append(self._strip_cells(csv_row))
 
         self._validate_csv_data(csv_data)
         return csv_data
 
-    def _validate_csv_data(self, csv_data: list[CSVRowType]) -> None:
+    def _validate_csv_data(self, csv_data: list[CSVRow]) -> None:
         """読み込んだCSVデータを検証"""
         if not csv_data:
             raise ValueError("CSVファイルが空です")
 
-    def _strip_cells(self, row: CSVRowType) -> CSVRowType:
+    def _strip_cells(self, row: CSVRow) -> CSVRow:
         """各セルの前後の空白を削除して返す"""
-        return [cell.strip() for cell in row]
+        return CSVRow(cell.strip() for cell in row)
 
     @property
     @override

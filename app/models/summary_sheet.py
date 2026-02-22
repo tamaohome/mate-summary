@@ -8,8 +8,7 @@ from typing import Final, overload, override
 
 from anytree import NodeMixin
 
-from app.io.csv_reader import CSVRowType
-from app.models.csv_data import CSVColType
+from app.io.csv_reader import CSVColumn, CSVRow
 from app.models.csv_summary_data import CSVSummaryData
 
 HEADER_COL_NAMES = ["材質", "形状", "寸法"]
@@ -77,7 +76,7 @@ class SummarySheet(NodeMixin):
 
     # def to_csvdata(self) -> CSVData:
     #     """`SummaryTable` を `CSVData` 形式に変換して返す"""
-    #     cols: list[CSVColType] = []
+    #     cols: list[CSVColumn] = []
 
     #     # ヘッダー列を構築
     #     # header_colsの各エントリを列に変換
@@ -93,7 +92,7 @@ class SummarySheet(NodeMixin):
     #         cols.append(row)
 
     #     # 行列変換
-    #     rows: list[CSVRowType] = []
+    #     rows: list[CSVRow] = []
     #     for row in zip(*cols, strict=False):
     #         rows.append(row)
 
@@ -104,7 +103,7 @@ class SummarySheet(NodeMixin):
         """総括表列を生成する"""
         # 分割したCSV総括表シートをループ
         for sheet in self._csv_summary_data.sheets:
-            header_cols: list[CSVColType] = []
+            header_cols: list[CSVColumn] = []
             # CSV総括表の列をループ
             for col in sheet.cols:
                 # ヘッダー列の場合はヘッダー列リストに追加してスキップ
@@ -116,9 +115,9 @@ class SummarySheet(NodeMixin):
 
 
 class SummaryColumn(NodeMixin):
-    """総括表の列クラス"""
+    """総括表列クラス"""
 
-    def __init__(self, summary_sheet: SummarySheet, col: CSVColType, header_cols: list[CSVColType]):
+    def __init__(self, summary_sheet: SummarySheet, col: CSVColumn, header_cols: list[CSVColumn]):
         self.summary_sheet: Final = summary_sheet
         self._col = col
         self._header_cols = header_cols
@@ -167,14 +166,13 @@ class SummaryColumn(NodeMixin):
 
     def _get_level_name(self) -> str:
         """CSV列データを基にレベル名（列の上位階層名）を返す"""
-        # TODO: CSVColType -> CSVColumn(list) クラス定義
         return self._header_cols[0][1]
 
     def _parse_summary_items(self) -> tuple[SummaryItem, ...]:
         """総括表アイテムを生成する"""
         items: list[SummaryItem] = []
         for i, cell in enumerate(self._col):
-            header = [col[i] for col in self._header_cols]
+            header = CSVRow(col[i] for col in self._header_cols)
             if _is_header_row(header):
                 continue
             if _is_subtotal_row(header):
@@ -202,7 +200,7 @@ class SummaryColumn(NodeMixin):
 
 
 class SummaryItem:
-    """総括表のアイテムクラス"""
+    """総括表アイテムクラス"""
 
     def __init__(self, parent: SummaryColumn, value: str, props: SummaryProps):
         self.parent: Final = parent
@@ -214,20 +212,28 @@ class SummaryItem:
 
 
 class SummaryProps(dict):
-    def __init__(self, header: list[str]):
-        self["材質"] = header[1]
-        self["形状"] = header[2]
-        self["寸法"] = header[3]
+    """総括表アイテムプロパティクラス"""
+
+    def __init__(self, props: list[str]):
+        self["材質"] = props[1]
+        self["形状"] = props[2]
+        self["寸法"] = props[3]
+
+    def __eq__(self, other: object) -> bool:
+        """材質、形状、寸法が全て同じなら同値と判定"""
+        if not isinstance(other, SummaryProps):
+            return False
+        return self["材質"] == other["材質"] and self["形状"] == other["形状"] and self["寸法"] == other["寸法"]
 
 
-def _is_header_row(row: CSVRowType) -> bool:
+def _is_header_row(row: CSVRow) -> bool:
     """ヘッダー行の場合 `True` を返す"""
     if row[0].endswith("レベル名"):
         return True
     return False
 
 
-def _is_header_col(col: CSVColType) -> bool:
+def _is_header_col(col: CSVColumn) -> bool:
     """ヘッダー列の場合 `True` を返す"""
     if col[0].endswith("レベル名"):
         return True
@@ -238,7 +244,7 @@ def _is_header_col(col: CSVColType) -> bool:
     return False
 
 
-def _is_subtotal_row(row: CSVRowType) -> bool:
+def _is_subtotal_row(row: CSVRow) -> bool:
     """小計行の場合 `True` を返す"""
     if "小計" in row:
         return True

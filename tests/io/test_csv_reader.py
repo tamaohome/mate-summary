@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 
 from app.io import ENCODING
-from app.io.csv_reader import CSVReader, CSVRowType
+from app.io.csv_reader import CSVReader, CSVRow
 
 
 @pytest.fixture(scope="module")
@@ -14,13 +14,13 @@ def sample_csv_path() -> Path:
 
 
 @pytest.fixture(scope="module")
-def sample_csv_rows(sample_csv_path: Path) -> list[CSVRowType]:
+def sample_csv_rows(sample_csv_path: Path) -> list[CSVRow]:
     """サンプルCSVファイルを基に読み込んだCSVデータを返すフィクスチャ"""
     reader = CSVReader(sample_csv_path)
     return reader.load()
 
 
-def test_CSVReader_セルの読み込み(sample_csv_rows: list[CSVRowType]):
+def test_CSVReader_セルの読み込み(sample_csv_rows: list[CSVRow]):
     header = sample_csv_rows[0]
     data = sample_csv_rows[1:]
 
