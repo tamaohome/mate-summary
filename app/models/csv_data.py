@@ -22,7 +22,7 @@ class CSVData(Sequence[CSVRowType]):
         return len(self.rows)
 
     @staticmethod
-    def load_from_csv_file(csv_path: str | Path) -> CSVData:
+    def load_from_csv(csv_path: str | Path) -> CSVData:
         """CSVファイルからインスタンスを生成する"""
         reader = CSVReader(csv_path)
         rows = reader.load()

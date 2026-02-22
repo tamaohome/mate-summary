@@ -3,8 +3,8 @@ from pathlib import Path
 from app.models.csv_data import CSVData
 
 
-def test_CSVData_load_from_csv_file(summary_csv_path: Path):
-    csv_data = CSVData.load_from_csv_file(summary_csv_path)
+def test_CSVData_load_from_csv(summary_csv_path: Path):
+    csv_data = CSVData.load_from_csv(summary_csv_path)
     assert isinstance(csv_data, CSVData)
 
 

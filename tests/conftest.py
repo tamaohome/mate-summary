@@ -15,12 +15,12 @@ def summary_csv_path() -> Path:
 @pytest.fixture(scope="module")
 def csv_data(summary_csv_path: Path) -> CSVData:
     """総括表CSVファイルから `CSVData` を返すフィクスチャ"""
-    data = CSVData.load_from_csv_file(summary_csv_path)
+    data = CSVData.load_from_csv(summary_csv_path)
     return data
 
 
 @pytest.fixture(scope="module")
 def csv_summary_data(summary_csv_path: Path) -> CSVSummaryData:
     """総括表CSVファイルから `CSVSummaryData` を返すフィクスチャ"""
-    data = CSVSummaryData.load_from_csv_file(summary_csv_path)
+    data = CSVSummaryData.load_from_csv(summary_csv_path)
     return data
