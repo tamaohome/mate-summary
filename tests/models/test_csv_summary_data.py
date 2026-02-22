@@ -1,6 +1,3 @@
-# import pytest
-
-
 from app.models.csv_summary_data import CSVSummaryData
 
 

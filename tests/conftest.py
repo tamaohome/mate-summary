@@ -4,6 +4,7 @@ import pytest
 
 from app.models.csv_data import CSVData
 from app.models.csv_summary_data import CSVSummaryData
+from app.models.summary_sheet import SummarySheet
 
 
 @pytest.fixture(scope="module")
@@ -24,3 +25,8 @@ def csv_summary_data(summary_csv_path: Path) -> CSVSummaryData:
     """総括表CSVファイルから `CSVSummaryData` を返すフィクスチャ"""
     data = CSVSummaryData.load_from_csv(summary_csv_path)
     return data
+
+
+@pytest.fixture(scope="module")
+def summary_sheet(summary_csv_path: Path) -> SummarySheet:
+    return SummarySheet.load_from_csv(summary_csv_path)
