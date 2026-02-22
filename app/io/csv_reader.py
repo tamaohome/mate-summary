@@ -1,12 +1,13 @@
 import csv
+from collections.abc import Sequence
 from pathlib import Path
 from typing import override
 
 from app.io import ENCODING
 from app.io.file_reader import BaseFileReader
 
-type CSVRowType = list[str]
-type CSVColType = list[str]
+type CSVRowType = Sequence[str]
+type CSVColType = Sequence[str]
 
 
 class CSVReader(BaseFileReader):

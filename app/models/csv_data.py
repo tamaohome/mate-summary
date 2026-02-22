@@ -29,7 +29,11 @@ class CSVData(Sequence[CSVRowType]):
         return CSVData(rows)
 
     def _rows_to_cols(self, rows: list[CSVRowType]) -> list[CSVColType]:
-        cols: list[CSVColType] = [list(col) for col in zip_longest(*rows, fillvalue="")]
+        cols: list[CSVColType] = []
+        for col in zip_longest(*rows, fillvalue=""):
+            if not any(col):
+                continue
+            cols.append(col)
         return cols
 
     def _cols_to_rows(self, cols: list[CSVColType]) -> list[CSVRowType]:

@@ -18,4 +18,9 @@ def test_CSVSummaryData_行数および列数(csv_summary_data: CSVSummaryData):
 
 
 def test_CSVSummaryData_分割したテーブルの取得(csv_summary_data: CSVSummaryData):
-    assert len(csv_summary_data.sheets) == 8
+    sheets = csv_summary_data.sheets
+    assert len(sheets) == 8  # 総括表シートの総数
+    # 各シートの列数をチェック
+    assert len(sheets[0].cols) == 6
+    assert len(sheets[1].cols) == 7
+    assert len(sheets[2].cols) == 8

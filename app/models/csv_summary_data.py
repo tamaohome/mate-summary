@@ -21,23 +21,23 @@ class CSVSummaryData(CSVData):
         rows = reader.load()
         return CSVSummaryData(rows)
 
-    def _parse_sheets(self) -> list[list[CSVRowType]]:
+    def _parse_sheets(self) -> list[CSVData]:
         """`CSVData` をヘッダーごとに分割したシートを生成"""
         csv_sheets = self._split_sheets_by_level()
         return list(csv_sheets)
 
-    def _split_sheets_by_level(self) -> Iterator[list[CSVRowType]]:
-        current_sheet: list[CSVRowType] = []
+    def _split_sheets_by_level(self) -> Iterator[CSVData]:
+        current_rows: list[CSVRowType] = []
         for row in self.rows:
             # 新しいシートを生成
-            if is_header_row(row) and current_sheet:
-                yield current_sheet
-                current_sheet = []
+            if is_header_row(row) and current_rows:
+                yield CSVData(current_rows)
+                current_rows = []
             # 現在のシートに行を追加
-            current_sheet.append(row)
+            current_rows.append(row)
 
-        if current_sheet:
-            yield current_sheet
+        if current_rows:
+            yield CSVData(current_rows)
 
 
 def is_header_row(csv_row: CSVRowType) -> bool:
