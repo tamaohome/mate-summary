@@ -19,9 +19,15 @@ class SummarySheet(NodeMixin):
 
     def __init__(self, csv_summary_data: CSVSummaryData):
         self._csv_summary_data: Final = csv_summary_data
+        self._csv_sheets = self._csv_summary_data.sheets
+
+        # 総括表列データをレベル毎に格納する
+        # 格納処理は SummaryColumn のコンストラクタで行う
         self.cols_by_level: defaultdict[int, list[SummaryColumn]]
-        self.cols_by_level = defaultdict(list)
+        self.cols_by_level: Final = defaultdict(list)
+
         self._parse_summary_columns()
+        self.total_col: Final = self._parse_total_column()
 
     def __iter__(self) -> Iterator[SummaryColumn]:
         return iter(self.children)
@@ -113,7 +119,7 @@ class SummarySheet(NodeMixin):
     def _parse_summary_columns(self) -> None:
         """総括表列を生成する"""
         # 分割したCSV総括表シートをループ
-        for sheet in self._csv_summary_data.sheets:
+        for sheet in self._csv_sheets:
             header_cols: list[CSVColumn] = []
             # CSV総括表の列をループ
             for col in sheet.cols:
@@ -123,6 +129,14 @@ class SummarySheet(NodeMixin):
                     continue
                 # 総括表列インスタンスを生成
                 SummaryColumn(self, col, header_cols)
+
+    def _parse_total_column(self) -> SummaryTotalColumn:
+        """総括表合計列を生成する"""
+        # 最上位レベルのCSVシートを取得
+        sheet = self._csv_sheets[0]
+        # CSVデータの "合計" 列を取得
+        total_col = sheet.cols[4]
+        return SummaryTotalColumn(total_col)
 
 
 class SummaryColumn(NodeMixin):
@@ -213,6 +227,15 @@ class SummaryColumn(NodeMixin):
 
         # 親階層が存在しない場合エラー
         raise ValueError(f"親階層が存在しません: {self.level_name} | {self.name}")
+
+
+class SummaryTotalColumn:
+    """総括表合計列クラス"""
+
+    def __init__(self, col: CSVColumn):
+        self.col: Final = col
+        self.name: Final = self.col[0]
+        self.data: Final = self.col[1:]
 
 
 class SummaryItem:

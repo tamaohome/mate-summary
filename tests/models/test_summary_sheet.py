@@ -1,4 +1,4 @@
-from app.models.summary_sheet import SummarySheet
+from app.models.summary_sheet import SummarySheet, SummaryTotalColumn
 
 
 def test_SummarySheet(summary_sheet: SummarySheet):
@@ -74,3 +74,12 @@ def test_SummarySheet_総括表の行ヘッダーリストを取得(summary_shee
     assert header_rows[1] == ["SMA490BW", "PL", "19.0"]
     # 最後の行
     assert header_rows[-1] == ["合計", "", ""]
+
+
+def test_SummaryTotalColumn_合計列を取得(summary_sheet: SummarySheet):
+    total_col = summary_sheet.total_col
+    assert isinstance(total_col, SummaryTotalColumn)
+    assert total_col.name == "合計"
+    assert total_col.data[0] == "166"
+    assert total_col.data[1] == "166"
+    assert total_col.data[-1] == "960"
