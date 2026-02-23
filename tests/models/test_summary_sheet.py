@@ -90,3 +90,32 @@ def test_SummaryTotalColumn_合計列を取得(summary_sheet: SummarySheet):
     assert total_col.data[1] == "38"
     # 最後の行
     assert total_col.data[-1] == "960"
+
+
+def test_SummaryColumn_csv_col(summary_sheet: SummarySheet):
+    # 最後の総括表列 (取付金具) を取得
+    summary_col = summary_sheet.descendants[-1]
+    correct_col = ["取付金具", "", "", "", "", "", "", "", "8", "", "", "8", "0", "", "0", "8"]
+    assert summary_col.name == "取付金具"
+    assert summary_col.csv_col == correct_col
+
+
+def test_SummarySheet_CSVデータ形式を返す(summary_sheet: SummarySheet):
+    # レベル1
+    summary_sheet.display_level = 1
+    csv_data_1 = summary_sheet.csv_data
+    assert csv_data_1.rows[0] == ["材質", "形状", "寸法", "合計", "上部構造"]
+    assert csv_data_1.rows[1] == ["SMA490BW", "PL", "19.0", "166", "166"]
+    # 小計の行は取得しない
+    assert csv_data_1.rows[2] == ["SMA490AW", "PL", "16.0", "38", "38"]
+    # 最後の行
+    assert csv_data_1.rows[-1] == ["合計", "", "", "960", "960"]
+
+    # レベル2
+    summary_sheet.display_level = 2
+    csv_data_2 = summary_sheet.csv_data
+    print(csv_data_2.rows[0])
+    assert csv_data_2.rows[0] == ["材質", "形状", "寸法", "合計", "主構造", "附属物"]
+    assert csv_data_2.rows[1] == ["SMA490BW", "PL", "19.0", "166", "166", "0"]
+    assert csv_data_2.rows[2] == ["SMA490AW", "PL", "16.0", "38", "38", "0"]
+    assert csv_data_2.rows[-1] == ["合計", "", "", "960", "952", "8"]

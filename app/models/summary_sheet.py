@@ -81,7 +81,7 @@ class SummarySheet(NodeMixin):
         return self.children[0].props_group
 
     @cached_property
-    def header_rows(self) -> list[CSVRow]:
+    def header_rows(self) -> tuple[CSVRow, ...]:
         """総括表の行ヘッダーリスト"""
         csv_rows: list[CSVRow] = []
         # 各行を追加
@@ -92,7 +92,7 @@ class SummarySheet(NodeMixin):
                 csv_rows.append(header_row)
             props_row = props.csv_row
             csv_rows.append(props_row)
-        return csv_rows
+        return tuple(csv_rows)
 
     @property
     def display_level(self) -> int:
@@ -110,12 +110,21 @@ class SummarySheet(NodeMixin):
     def csv_data(self) -> CSVData:
         """総括表CSVデータ"""
         # ヘッダー列 (材質, 形状, 寸法) を追加
-        csv_rows: list[CSVRow] = self.header_rows
+        # CSVRow のコピーを作成して header_rows への参照を防止
+        csv_rows = [CSVRow(row) for row in self.header_rows]
+
+        # 追加する総括表列のリストを取得
+        summary_cols = self.cols_by_level[self.display_level]
 
         # 合計列を追加
         for i, cell in enumerate(self.total_col):
             current_row = csv_rows[i]
             current_row.append(cell)
+
+            # 総括表列を追加
+            for summary_col in summary_cols:
+                cell = summary_col.csv_col[i]
+                current_row.append(cell)
 
         return CSVData(csv_rows)
 
@@ -177,6 +186,19 @@ class SummaryColumn(NodeMixin):
     def props_group(self) -> tuple[SummaryProps, ...]:
         """材片種別一覧"""
         return tuple(props for props in self.items.keys())
+
+    @property
+    def csv_col(self) -> CSVColumn:
+        """CSV出力用列データ"""
+        col = CSVColumn([self.name])
+        for prop in self.summary_sheet.props_group:
+            item = self.items.get(prop)
+            if not item:
+                col.append("")
+                continue
+            col.append(item.value)
+
+        return col
 
     def _get_name(self) -> str:
         """CSV列データを基に列名を返す"""
