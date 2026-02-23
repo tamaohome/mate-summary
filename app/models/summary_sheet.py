@@ -152,8 +152,15 @@ class SummaryColumn(NodeMixin):
         # レベル毎の辞書に自ノードを追加
         self.summary_sheet.cols_by_level[self.level].append(self)
 
-    def __getitem__(self, index):
-        return self.children[index]
+    @overload
+    def __getitem__(self, key: int) -> SummaryItem: ...
+    @overload
+    def __getitem__(self, key: SummaryProps) -> SummaryItem | None: ...
+    def __getitem__(self, key: int | SummaryProps) -> SummaryItem | None:
+        if isinstance(key, int):
+            return list(self.items.values())[key]
+        if isinstance(key, SummaryProps):
+            return self.items[key]
 
     def __len__(self) -> int:
         return len(self.children)
