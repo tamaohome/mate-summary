@@ -169,7 +169,7 @@ class SummaryColumn(NodeMixin):
     @property
     def props_group(self) -> tuple[SummaryProps, ...]:
         """材片種別一覧"""
-        return tuple(item.props for item in self.items)
+        return tuple(props for props in self.items.keys())
 
     def _get_name(self) -> str:
         """CSV列データを基に列名を返す"""
@@ -193,9 +193,9 @@ class SummaryColumn(NodeMixin):
         """CSV列データを基にレベル名（列の上位階層名）を返す"""
         return self._header_cols[0][1]
 
-    def _parse_summary_items(self) -> tuple[SummaryItem, ...]:
-        """総括表アイテムを生成する"""
-        items: list[SummaryItem] = []
+    def _parse_summary_items(self) -> dict[SummaryProps, SummaryItem]:
+        """総括表アイテムリスト (`SummaryProps` をキーとする辞書) を生成する"""
+        items: dict[SummaryProps, SummaryItem] = {}
         for i, cell in enumerate(self._col):
             header = CSVRow(col[i] for col in self._header_cols)
             if _is_header_row(header):
@@ -204,8 +204,8 @@ class SummaryColumn(NodeMixin):
                 continue
             props = SummaryProps(header)
             item = SummaryItem(self, cell, props)
-            items.append(item)
-        return tuple(items)
+            items[props] = item
+        return items
 
     def _get_parent(self) -> SummaryColumn | SummarySheet:
         """レベル名と一致するノードを走査し、親階層を返す"""
