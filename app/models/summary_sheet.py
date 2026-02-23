@@ -18,6 +18,7 @@ class SummarySheet(NodeMixin):
     """総括表クラス"""
 
     def __init__(self, csv_summary_data: CSVSummaryData):
+        self._display_level = 1  # CSV出力用
         self._csv_summary_data: Final = csv_summary_data
         self._csv_sheets = self._csv_summary_data.sheets
 
@@ -90,6 +91,18 @@ class SummarySheet(NodeMixin):
             props_row = props.csv_row
             csv_rows.append(props_row)
         return csv_rows
+
+    @property
+    def display_level(self) -> int:
+        """CSV出力時の階層レベル"""
+        return self._display_level
+
+    @display_level.setter
+    def display_level(self, value: int) -> None:
+        """`1~4` の値を受け付ける"""
+        if not isinstance(value, int) or value < 1 or value > 4:
+            raise ValueError("display_level には 1 ~ 4 のint値を設定してください")
+        self._display_level = value
 
     # def to_csvdata(self) -> CSVData:
     #     """`SummaryTable` を `CSVData` 形式に変換して返す"""
