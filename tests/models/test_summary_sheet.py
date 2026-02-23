@@ -1,3 +1,4 @@
+import pytest
 from app.models.summary_sheet import SummarySheet, SummaryTotalColumn
 
 
@@ -70,16 +71,22 @@ def test_SummaryProps_等価性のチェック(summary_sheet: SummarySheet):
 
 def test_SummarySheet_総括表の行ヘッダーリストを取得(summary_sheet: SummarySheet):
     header_rows = summary_sheet.header_rows
+    assert len(header_rows) == 16
     assert header_rows[0] == ["材質", "形状", "寸法"]
     assert header_rows[1] == ["SMA490BW", "PL", "19.0"]
+    # 小計の行は取得しない
+    assert header_rows[2] == ["SMA490AW", "PL", "16.0"]
     # 最後の行
     assert header_rows[-1] == ["合計", "", ""]
 
 
 def test_SummaryTotalColumn_合計列を取得(summary_sheet: SummarySheet):
     total_col = summary_sheet.total_col
+    assert len(total_col) == 16
     assert isinstance(total_col, SummaryTotalColumn)
     assert total_col.name == "合計"
     assert total_col.data[0] == "166"
-    assert total_col.data[1] == "166"
+    # 小計の行は取得しない
+    assert total_col.data[1] == "38"
+    # 最後の行
     assert total_col.data[-1] == "960"

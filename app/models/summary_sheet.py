@@ -3,12 +3,14 @@ from __future__ import annotations
 import re
 from collections import defaultdict
 from collections.abc import Iterator
+from functools import cached_property
 from pathlib import Path
 from typing import Final, overload, override
 
 from anytree import NodeMixin
 
 from app.io.csv_reader import CSVColumn, CSVRow
+from app.models.csv_data import CSVData
 from app.models.csv_summary_data import CSVSummaryData
 
 HEADER_COL_NAMES = ["材質", "形状", "寸法"]
@@ -28,7 +30,7 @@ class SummarySheet(NodeMixin):
         self.cols_by_level: Final = defaultdict(list)
 
         self._parse_summary_columns()
-        self.total_col: Final = self._parse_total_column()
+        self.total_col: Final = SummaryTotalColumn.parse_total_column(self)
 
     def __iter__(self) -> Iterator[SummaryColumn]:
         return iter(self.children)
@@ -78,7 +80,7 @@ class SummarySheet(NodeMixin):
         """
         return self.children[0].props_group
 
-    @property
+    @cached_property
     def header_rows(self) -> list[CSVRow]:
         """総括表の行ヘッダーリスト"""
         csv_rows: list[CSVRow] = []
@@ -104,30 +106,18 @@ class SummarySheet(NodeMixin):
             raise ValueError("display_level には 1 ~ 4 のint値を設定してください")
         self._display_level = value
 
-    # def to_csvdata(self) -> CSVData:
-    #     """`SummaryTable` を `CSVData` 形式に変換して返す"""
-    #     cols: list[CSVColumn] = []
+    @property
+    def csv_data(self) -> CSVData:
+        """総括表CSVデータ"""
+        # ヘッダー列 (材質, 形状, 寸法) を追加
+        csv_rows: list[CSVRow] = self.header_rows
 
-    #     # ヘッダー列を構築
-    #     # header_colsの各エントリを列に変換
-    #     for header_name, header_values in self.header_cols.items():
-    #         cols.append([header_name] + header_values)
+        # 合計列を追加
+        for i, cell in enumerate(self.total_col):
+            current_row = csv_rows[i]
+            current_row.append(cell)
 
-    #     # データ列を構築
-    #     # 各SummaryColumnとその配下のSummaryItemを処理
-    #     for col in self.cols:
-    #         row = [col.name]
-    #         for item in col.items:
-    #             row.append(item.value)
-    #         cols.append(row)
-
-    #     # 行列変換
-    #     rows: list[CSVRow] = []
-    #     for row in zip(*cols, strict=False):
-    #         rows.append(row)
-
-    #     # CSVDataオブジェクトを生成して返す
-    #     return CSVData(rows)
+        return CSVData(csv_rows)
 
     def _parse_summary_columns(self) -> None:
         """総括表列を生成する"""
@@ -142,14 +132,6 @@ class SummarySheet(NodeMixin):
                     continue
                 # 総括表列インスタンスを生成
                 SummaryColumn(self, col, header_cols)
-
-    def _parse_total_column(self) -> SummaryTotalColumn:
-        """総括表合計列を生成する"""
-        # 最上位レベルのCSVシートを取得
-        sheet = self._csv_sheets[0]
-        # CSVデータの "合計" 列を取得
-        total_col = sheet.cols[4]
-        return SummaryTotalColumn(total_col)
 
 
 class SummaryColumn(NodeMixin):
@@ -242,13 +224,33 @@ class SummaryColumn(NodeMixin):
         raise ValueError(f"親階層が存在しません: {self.level_name} | {self.name}")
 
 
-class SummaryTotalColumn:
+class SummaryTotalColumn(list[str]):
     """総括表合計列クラス"""
 
-    def __init__(self, col: CSVColumn):
-        self.col: Final = col
-        self.name: Final = self.col[0]
-        self.data: Final = self.col[1:]
+    @property
+    def name(self) -> str:
+        """列名"""
+        return self[0]
+
+    @property
+    def data(self) -> CSVColumn:
+        """列データ"""
+        return CSVColumn(self[1:])
+
+    @staticmethod
+    def parse_total_column(summary_sheet: SummarySheet) -> SummaryTotalColumn:
+        """総括表合計列を生成する"""
+        # 最上位レベルのCSVシートを取得
+        sheet = summary_sheet._csv_sheets[0]
+        # CSVデータの "合計" 列を取得
+        total_col: list[str] = []
+        for row in sheet:
+            # 小計行はスキップ
+            if _is_subtotal_row(row):
+                continue
+            # 合計列のセルを追加
+            total_col.append(row[4])
+        return SummaryTotalColumn(total_col)
 
 
 class SummaryItem:
