@@ -1,0 +1,1 @@
+ENCODING = "shift_jis"
