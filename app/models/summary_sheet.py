@@ -30,11 +30,7 @@ class SummarySheet(NodeMixin):
     def __getitem__(self, key: int) -> SummaryColumn: ...
     @overload
     def __getitem__(self, key: slice) -> tuple[SummaryColumn, ...]: ...
-    @overload
-    def __getitem__(self, key: str) -> list[str]: ...
-    def __getitem__(self, key: int | slice | str):
-        if isinstance(key, str):
-            return self.header_cols[key]
+    def __getitem__(self, key: int | slice):
         return self.cols[key]
 
     def __repr__(self) -> str:
@@ -67,12 +63,27 @@ class SummarySheet(NodeMixin):
         return self.cols
 
     @property
-    def header_cols(self) -> dict[str, list[str]]:
-        """総括表ヘッダー列"""
-        result: dict[str, list[str]] = {}
-        for header_name in HEADER_COL_NAMES:
-            result[header_name] = [col[header_name] for col in self.cols]
-        return result
+    def props_group(self) -> tuple[SummaryProps, ...]:
+        """
+        材片種別一覧
+
+        最上位レベルの `SummaryColumn` から取得する
+        """
+        return self.children[0].props_group
+
+    @property
+    def header_rows(self) -> list[CSVRow]:
+        """総括表の行ヘッダーリスト"""
+        csv_rows: list[CSVRow] = []
+        # 各行を追加
+        for props in self.props_group:
+            # 初回はヘッダー行を追加
+            if not csv_rows:
+                header_row = props.csv_header_row
+                csv_rows.append(header_row)
+            props_row = props.csv_row
+            csv_rows.append(props_row)
+        return csv_rows
 
     # def to_csvdata(self) -> CSVData:
     #     """`SummaryTable` を `CSVData` 形式に変換して返す"""
@@ -145,6 +156,11 @@ class SummaryColumn(NodeMixin):
     @property
     def children(self) -> tuple[SummaryColumn, ...]:
         return super().children
+
+    @property
+    def props_group(self) -> tuple[SummaryProps, ...]:
+        """材片種別一覧"""
+        return tuple(item.props for item in self.items)
 
     def _get_name(self) -> str:
         """CSV列データを基に列名を返す"""
@@ -224,6 +240,18 @@ class SummaryProps(dict):
         if not isinstance(other, SummaryProps):
             return False
         return self["材質"] == other["材質"] and self["形状"] == other["形状"] and self["寸法"] == other["寸法"]
+
+    @property
+    def csv_row(self) -> CSVRow:
+        """材片種別をCSV行データとして返す"""
+        row = list(self.values())
+        return CSVRow(row)
+
+    @property
+    def csv_header_row(self) -> CSVRow:
+        """材片種別ヘッダーをCSV行データとして返す"""
+        header_row = list(self.keys())
+        return CSVRow(header_row)
 
 
 def _is_header_row(row: CSVRow) -> bool:

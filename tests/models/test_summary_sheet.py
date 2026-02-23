@@ -67,3 +67,10 @@ def test_SummaryProps_等価性のチェック(summary_sheet: SummarySheet):
     assert item_1.props == item_2.props
     assert item_1.props != item_3.props
 
+
+def test_SummarySheet_総括表の行ヘッダーリストを取得(summary_sheet: SummarySheet):
+    header_rows = summary_sheet.header_rows
+    assert header_rows[0] == ["材質", "形状", "寸法"]
+    assert header_rows[1] == ["SMA490BW", "PL", "19.0"]
+    # 最後の行
+    assert header_rows[-1] == ["合計", "", ""]
