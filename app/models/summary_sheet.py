@@ -279,6 +279,10 @@ class SummaryProps(dict):
             return False
         return self["材質"] == other["材質"] and self["形状"] == other["形状"] and self["寸法"] == other["寸法"]
 
+    def __hash__(self) -> int:
+        """材質、形状、寸法をもとにハッシュ値を計算"""
+        return hash((self["材質"], self["形状"], self["寸法"]))
+
     @property
     def csv_row(self) -> CSVRow:
         """材片種別をCSV行データとして返す"""
