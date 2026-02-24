@@ -10,7 +10,7 @@ from app.models.summary_sheet import SummarySheet
 @pytest.mark.skip
 def test_CSVの書き出し(summary_sheets: list[SummarySheet]) -> None:
     sheet = summary_sheets[1]
-    output_csvdata = sheet.to_csvdata()
+    output_csvdata = sheet.csv_data
 
     with tempfile.TemporaryDirectory() as tmpdir:
         output_csv_path = Path(tmpdir) / "output.csv"
