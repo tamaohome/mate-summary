@@ -27,6 +27,9 @@ class SummaryTableWidget(QTableWidget):
         # 列幅の設定
         self._configure_column_widths([100, 50, 120], 60)
 
+        # 行の高さを設定
+        self._configure_row_heights(22)
+
     def _configure_column_widths(self, widths: list[int], default_width: int | None = None) -> None:
         """列幅を設定する"""
         # 指定された列幅を個別に設定
@@ -39,3 +42,8 @@ class SummaryTableWidget(QTableWidget):
             return
         for col_index in range(len(widths), self.columnCount()):
             self.setColumnWidth(col_index, default_width)
+
+    def _configure_row_heights(self, height: int) -> None:
+        """行の高さを設定する"""
+        for row_index in range(self.rowCount()):
+            self.setRowHeight(row_index, height)
