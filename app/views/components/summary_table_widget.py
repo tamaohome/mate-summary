@@ -23,3 +23,19 @@ class SummaryTableWidget(QTableWidget):
                     alignment = Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter
                     item.setTextAlignment(alignment)
                 self.setItem(r, c, item)
+
+        # 列幅の設定
+        self._configure_column_widths([100, 50, 120], 60)
+
+    def _configure_column_widths(self, widths: list[int], default_width: int | None = None) -> None:
+        """列幅を設定する"""
+        # 指定された列幅を個別に設定
+        for col_index, width in enumerate(widths):
+            if col_index < self.columnCount():
+                self.setColumnWidth(col_index, width)
+
+        # デフォルト列幅を一括設定
+        if not default_width:
+            return
+        for col_index in range(len(widths), self.columnCount()):
+            self.setColumnWidth(col_index, default_width)
