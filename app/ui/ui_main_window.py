@@ -17,8 +17,9 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
 from PySide6.QtWidgets import (QAbstractItemView, QApplication, QHeaderView, QMainWindow,
-    QMenu, QMenuBar, QSizePolicy, QStatusBar,
-    QTabWidget, QTableWidgetItem, QVBoxLayout, QWidget)
+    QMenu, QMenuBar, QPushButton, QSizePolicy,
+    QStatusBar, QTabWidget, QTableWidgetItem, QVBoxLayout,
+    QWidget)
 
 from app.views.components.file_selector import FileSelector
 from app.views.components.summary_table_widget import SummaryTableWidget
@@ -111,6 +112,14 @@ class Ui_MainWindow(object):
 
         self.centralLayout.addWidget(self.levelTabWidget)
 
+        self.saveButton = QPushButton(self.centralwidget)
+        self.saveButton.setObjectName(u"saveButton")
+        self.saveButton.setMaximumSize(QSize(200, 16777215))
+        icon = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.DocumentSaveAs))
+        self.saveButton.setIcon(icon)
+
+        self.centralLayout.addWidget(self.saveButton, 0, Qt.AlignCenter)
+
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
@@ -143,6 +152,7 @@ class Ui_MainWindow(object):
         self.levelTabWidget.setTabText(self.levelTabWidget.indexOf(self.level2Tab), QCoreApplication.translate("MainWindow", u"#2\u30ec\u30d9\u30eb", None))
         self.levelTabWidget.setTabText(self.levelTabWidget.indexOf(self.level3Tab), QCoreApplication.translate("MainWindow", u"#3\u30ec\u30d9\u30eb", None))
         self.levelTabWidget.setTabText(self.levelTabWidget.indexOf(self.level4Tab), QCoreApplication.translate("MainWindow", u"#4\u30ec\u30d9\u30eb", None))
+        self.saveButton.setText(QCoreApplication.translate("MainWindow", u"CSV\u30d5\u30a1\u30a4\u30eb\u3068\u3057\u3066\u4fdd\u5b58...", None))
         self.fileMenu.setTitle(QCoreApplication.translate("MainWindow", u"\u30d5\u30a1\u30a4\u30eb", None))
     # retranslateUi
 
