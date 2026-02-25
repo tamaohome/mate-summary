@@ -1,5 +1,5 @@
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QTableWidget, QTableWidgetItem
+from PySide6.QtWidgets import QTableWidget, QTableWidgetItem, QWidget
 
 from app.models.csv_data import CSVData
 
@@ -7,7 +7,7 @@ from app.models.csv_data import CSVData
 class SummaryTableWidget(QTableWidget):
     """総括表を表示するテーブルウィジェット"""
 
-    def __init__(self, parent=None):
+    def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
 
     def populate(self, csv_data: CSVData) -> None:
