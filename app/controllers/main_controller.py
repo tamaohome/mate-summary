@@ -3,12 +3,10 @@ from __future__ import annotations
 import logging
 from pathlib import Path
 
-from PySide6.QtCore import QFileInfo, QObject, Qt, Slot
-from PySide6.QtWidgets import QTableWidget, QTableWidgetItem
+from PySide6.QtCore import QFileInfo, QObject, Slot
 
-from app.core.summary_table_parser import SummaryTableParser
-from app.models.csv_data import CSVData
-from app.models.summary_table import SummaryTable
+from app.models.summary_sheet import SummarySheet
+from app.views.components.summary_table_widget import SummaryTableWidget
 from app.views.main_window import MainWindow
 
 LEVELS = [1, 2, 3, 4]
@@ -22,7 +20,7 @@ class MainController(QObject):
         self._setup()
 
         # 状態変数
-        self.summary_table: SummaryTable | None = None
+        self.summary_sheet: SummarySheet | None = None
 
     def _setup(self) -> None:
         """シグナル接続と初期化処理を行う"""
@@ -37,8 +35,8 @@ class MainController(QObject):
         for level in LEVELS:
             self._init_table_widget(level)
 
-    def _get_table_widget(self, level: int) -> QTableWidget:
-        """レベル番号に対応する `QTableWidget` を返す"""
+    def _get_table_widget(self, level: int) -> SummaryTableWidget:
+        """レベル番号に対応するテーブルウィジェットを返す"""
         mapping = {
             1: self.main_window.level1TableWidget,
             2: self.main_window.level2TableWidget,
@@ -46,7 +44,7 @@ class MainController(QObject):
             4: self.main_window.level4TableWidget,
         }
         widget = mapping.get(level)
-        if widget:
+        if isinstance(widget, SummaryTableWidget):
             return widget
 
         raise RuntimeError(f"レベル{level} のテーブルが見つかりません。")
@@ -65,26 +63,14 @@ class MainController(QObject):
     def _update_tables(self) -> None:
         """テーブルを全て更新する"""
         csv_filepath = Path(self.filepath.absoluteFilePath())
-        summary_table_parser = SummaryTableParser(csv_filepath)
-        summary_tables = summary_table_parser.parse()
+        summary_sheet = SummarySheet.load_from_csv(csv_filepath)
 
-        for index, summary_table in summary_tables.items():
-            self._populate_table(index, summary_table.to_csvdata())
-
-    def _populate_table(self, level: int, csv_data: CSVData) -> None:
-        """指定されたレベルのテーブルにデータをセットする"""
-        table = self._get_table_widget(level)
-        table.setColumnCount(len(csv_data.header))
-        table.setHorizontalHeaderLabels(csv_data.header)
-        table.setRowCount(len(csv_data))
-        for r, row in enumerate(csv_data.data):
-            for c, value in enumerate(row):
-                item = QTableWidgetItem(str(value))
-                # 5列目以降（インデックス4以上）は右揃えにする
-                if c >= 4:
-                    alignment = Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter
-                    item.setTextAlignment(alignment)
-                table.setItem(r, c, item)
+        # レベル毎にシートをセット
+        for level in LEVELS:
+            summary_sheet.display_level = level
+            csv_data = summary_sheet.csv_data
+            table_widget = self._get_table_widget(level)
+            table_widget.populate(csv_data)
 
     def set_initial_path(self, filepath: str) -> None:
         """外部から初期ファイルパスを設定する"""

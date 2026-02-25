@@ -46,7 +46,7 @@
        <enum>QTabWidget::TabShape::Triangular</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>3</number>
       </property>
       <property name="documentMode">
        <bool>true</bool>
@@ -69,7 +69,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QTableWidget" name="level1TableWidget">
+         <widget class="SummaryTableWidget" name="level1TableWidget">
           <property name="styleSheet">
            <string notr="true">QTableWidget::item:selected { background: #316AC5; }</string>
           </property>
@@ -98,7 +98,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QTableWidget" name="level2TableWidget">
+         <widget class="SummaryTableWidget" name="level2TableWidget">
           <property name="styleSheet">
            <string notr="true">QTableWidget::item:selected { background: #316AC5; }</string>
           </property>
@@ -127,7 +127,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QTableWidget" name="level3TableWidget">
+         <widget class="SummaryTableWidget" name="level3TableWidget">
           <property name="styleSheet">
            <string notr="true">QTableWidget::item:selected { background: #316AC5; }</string>
           </property>
@@ -156,7 +156,7 @@
          <number>0</number>
         </property>
         <item>
-         <widget class="QTableWidget" name="level4TableWidget">
+         <widget class="SummaryTableWidget" name="level4TableWidget">
           <property name="styleSheet">
            <string notr="true">QTableWidget::item:selected { background: #316AC5; }</string>
           </property>
@@ -189,6 +189,11 @@
    <extends>QWidget</extends>
    <header>app/views/components/file_selector</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>SummaryTableWidget</class>
+   <extends>QTableWidget</extends>
+   <header>app/views/components/summary_table_widget</header>
   </customwidget>
  </customwidgets>
  <resources/>
