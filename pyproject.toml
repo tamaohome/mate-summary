@@ -24,6 +24,9 @@ dev = [
     "ruff>=0.14.3",
 ]
 
+[tool.pyright]
+exclude = [".venv/**", "app/ui/**"]
+
 [tool.ruff]
 target-version = "py312"
 line-length = 120
