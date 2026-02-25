@@ -17,9 +17,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QAbstractItemView, QApplication, QHeaderView, QMainWindow,
     QMenuBar, QSizePolicy, QStatusBar, QTabWidget,
-    QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget)
+    QTableWidgetItem, QVBoxLayout, QWidget)
 
 from app.views.components.file_selector import FileSelector
+from app.views.components.summary_table_widget import SummaryTableWidget
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -53,7 +54,7 @@ class Ui_MainWindow(object):
         self.level1TabLayout = QVBoxLayout(self.level1Tab)
         self.level1TabLayout.setObjectName(u"level1TabLayout")
         self.level1TabLayout.setContentsMargins(0, 0, 0, 0)
-        self.level1TableWidget = QTableWidget(self.level1Tab)
+        self.level1TableWidget = SummaryTableWidget(self.level1Tab)
         self.level1TableWidget.setObjectName(u"level1TableWidget")
         self.level1TableWidget.setStyleSheet(u"QTableWidget::item:selected { background: #316AC5; }")
         self.level1TableWidget.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
@@ -66,7 +67,7 @@ class Ui_MainWindow(object):
         self.level2TabLayout = QVBoxLayout(self.level2Tab)
         self.level2TabLayout.setObjectName(u"level2TabLayout")
         self.level2TabLayout.setContentsMargins(0, 0, 0, 0)
-        self.level2TableWidget = QTableWidget(self.level2Tab)
+        self.level2TableWidget = SummaryTableWidget(self.level2Tab)
         self.level2TableWidget.setObjectName(u"level2TableWidget")
         self.level2TableWidget.setStyleSheet(u"QTableWidget::item:selected { background: #316AC5; }")
         self.level2TableWidget.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
@@ -79,7 +80,7 @@ class Ui_MainWindow(object):
         self.level3TabLayout = QVBoxLayout(self.level3Tab)
         self.level3TabLayout.setObjectName(u"level3TabLayout")
         self.level3TabLayout.setContentsMargins(0, 0, 0, 0)
-        self.level3TableWidget = QTableWidget(self.level3Tab)
+        self.level3TableWidget = SummaryTableWidget(self.level3Tab)
         self.level3TableWidget.setObjectName(u"level3TableWidget")
         self.level3TableWidget.setStyleSheet(u"QTableWidget::item:selected { background: #316AC5; }")
         self.level3TableWidget.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
@@ -92,7 +93,7 @@ class Ui_MainWindow(object):
         self.level4TabLayout = QVBoxLayout(self.level4Tab)
         self.level4TabLayout.setObjectName(u"level4TabLayout")
         self.level4TabLayout.setContentsMargins(0, 0, 0, 0)
-        self.level4TableWidget = QTableWidget(self.level4Tab)
+        self.level4TableWidget = SummaryTableWidget(self.level4Tab)
         self.level4TableWidget.setObjectName(u"level4TableWidget")
         self.level4TableWidget.setStyleSheet(u"QTableWidget::item:selected { background: #316AC5; }")
         self.level4TableWidget.setEditTriggers(QAbstractItemView.EditTrigger.NoEditTriggers)
@@ -114,7 +115,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.levelTabWidget.setCurrentIndex(0)
+        self.levelTabWidget.setCurrentIndex(3)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
