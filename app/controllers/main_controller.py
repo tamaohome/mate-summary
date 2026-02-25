@@ -6,9 +6,8 @@ from pathlib import Path
 from PySide6.QtCore import QFileInfo, QObject, Qt, Slot
 from PySide6.QtWidgets import QTableWidget, QTableWidgetItem
 
-from app.core.summary_table_parser import SummaryTableParser
 from app.models.csv_data import CSVData
-from app.models.summary_table import SummaryTable
+from app.models.summary_sheet import SummarySheet
 from app.views.main_window import MainWindow
 
 LEVELS = [1, 2, 3, 4]
@@ -22,7 +21,7 @@ class MainController(QObject):
         self._setup()
 
         # 状態変数
-        self.summary_table: SummaryTable | None = None
+        self.summary_sheet: SummarySheet | None = None
 
     def _setup(self) -> None:
         """シグナル接続と初期化処理を行う"""
@@ -65,11 +64,13 @@ class MainController(QObject):
     def _update_tables(self) -> None:
         """テーブルを全て更新する"""
         csv_filepath = Path(self.filepath.absoluteFilePath())
-        summary_table_parser = SummaryTableParser(csv_filepath)
-        summary_tables = summary_table_parser.parse()
+        summary_sheet = SummarySheet.load_from_csv(csv_filepath)
 
-        for index, summary_table in summary_tables.items():
-            self._populate_table(index, summary_table.to_csvdata())
+        # レベル毎にシートをセット
+        for level in LEVELS:
+            summary_sheet.display_level = level
+            csv_data = summary_sheet.csv_data
+            self._populate_table(level, csv_data)
 
     def _populate_table(self, level: int, csv_data: CSVData) -> None:
         """指定されたレベルのテーブルにデータをセットする"""
