@@ -16,7 +16,7 @@ class BaseFileReader(ABC):
         """許可する拡張子のリスト"""
 
     @abstractmethod
-    def load(self) -> list[str]:
+    def load(self) -> list:
         """ファイルを文字列リストとして返す"""
 
     def validate(self) -> None:
