@@ -5,6 +5,7 @@ from collections import defaultdict
 from collections.abc import Iterator
 from functools import cached_property
 from pathlib import Path
+from types import MappingProxyType
 from typing import Final, overload, override
 
 from anytree import NodeMixin
@@ -50,11 +51,6 @@ class SummarySheet(NodeMixin):
         """CSVファイルからインスタンスを生成する"""
         csv_summary_data = CSVSummaryData.load_from_csv(csv_path)
         return SummarySheet(csv_summary_data)
-
-    @property
-    @override
-    def children(self) -> tuple[SummaryColumn, ...]:
-        return super().children
 
     @property
     @override
@@ -179,10 +175,6 @@ class SummaryColumn(NodeMixin):
         return f"SummaryColumn(name={self.name!r}, level_name={self.level_name!r}, items={items_count})"
 
     @property
-    def children(self) -> tuple[SummaryColumn, ...]:
-        return super().children
-
-    @property
     def props_group(self) -> tuple[SummaryProps, ...]:
         """材片種別一覧"""
         return tuple(props for props in self.items.keys())
@@ -294,23 +286,39 @@ class SummaryItem:
         return f"SummaryItem(value={self.value!r})"
 
 
-class SummaryProps(dict):
+class SummaryProps:
     """総括表アイテムプロパティクラス"""
 
     def __init__(self, props: list[str]):
-        self["材質"] = props[1]
-        self["形状"] = props[2]
-        self["寸法"] = props[3]
+        data = {
+            # 0列目は #nレベル名 (親階層の名称)
+            "材質": props[1],
+            "形状": props[2],
+            "寸法": props[3],
+        }
+        self._data: MappingProxyType[str, str] = MappingProxyType(data)
+
+    def __getitem__(self, key: str) -> str:
+        """キーで値を取得"""
+        return self._data[key]
 
     def __eq__(self, other: object) -> bool:
         """材質、形状、寸法が全て同じなら同値と判定"""
         if not isinstance(other, SummaryProps):
             return False
-        return self["材質"] == other["材質"] and self["形状"] == other["形状"] and self["寸法"] == other["寸法"]
+        return self._data == other._data
 
     def __hash__(self) -> int:
         """材質、形状、寸法をもとにハッシュ値を計算"""
-        return hash((self["材質"], self["形状"], self["寸法"]))
+        return hash((self._data["材質"], self._data["形状"], self._data["寸法"]))
+
+    def keys(self) -> list[str]:
+        """キー一覧を返す"""
+        return list(self._data.keys())
+
+    def values(self) -> list[str]:
+        """値一覧を返す"""
+        return list(self._data.values())
 
     @property
     def csv_row(self) -> CSVRow:
