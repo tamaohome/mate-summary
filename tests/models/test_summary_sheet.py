@@ -1,5 +1,4 @@
-import pytest
-from app.models.summary_sheet import SummaryProps, SummarySheet, SummaryTotalColumn
+from app.models.summary_sheet import SummarySheet, SummaryTotalColumn
 
 
 def test_SummarySheet(summary_sheet: SummarySheet):
