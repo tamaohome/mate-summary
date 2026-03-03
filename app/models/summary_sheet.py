@@ -54,11 +54,6 @@ class SummarySheet(NodeMixin):
 
     @property
     @override
-    def children(self) -> tuple[SummaryColumn, ...]:
-        return super().children
-
-    @property
-    @override
     def descendants(self) -> tuple[SummaryColumn, ...]:
         return super().descendants
 
@@ -178,10 +173,6 @@ class SummaryColumn(NodeMixin):
     def __repr__(self) -> str:
         items_count = len(self.items)
         return f"SummaryColumn(name={self.name!r}, level_name={self.level_name!r}, items={items_count})"
-
-    @property
-    def children(self) -> tuple[SummaryColumn, ...]:
-        return super().children
 
     @property
     def props_group(self) -> tuple[SummaryProps, ...]:
