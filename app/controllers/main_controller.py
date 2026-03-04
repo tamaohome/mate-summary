@@ -4,6 +4,7 @@ import logging
 from pathlib import Path
 
 from PySide6.QtCore import QFileInfo, QObject, Slot
+from PySide6.QtWidgets import QFileDialog
 
 from app.models.summary_sheet import SummarySheet
 from app.views.components.summary_table_widget import SummaryTableWidget
@@ -26,6 +27,11 @@ class MainController(QObject):
         """シグナル接続と初期化処理を行う"""
         # シグナル接続
         self.main_window.fileSelector.pathChanged.connect(self.on_path_changed)
+
+        # メニューアクション接続
+        self.main_window.actionOpen.triggered.connect(self.on_open)
+        self.main_window.actionSaveAs.triggered.connect(self.on_save_as)
+        self.main_window.actionExit.triggered.connect(self.on_exit)
 
         # テーブルを全て初期化
         self._init_tables()
@@ -63,12 +69,12 @@ class MainController(QObject):
     def _update_tables(self) -> None:
         """テーブルを全て更新する"""
         csv_filepath = Path(self.filepath.absoluteFilePath())
-        summary_sheet = SummarySheet.load_from_csv(csv_filepath)
+        self.summary_sheet = SummarySheet.load_from_csv(csv_filepath)
 
         # レベル毎にシートをセット
         for level in LEVELS:
-            summary_sheet.display_level = level
-            csv_data = summary_sheet.csv_data
+            self.summary_sheet.display_level = level
+            csv_data = self.summary_sheet.csv_data
             table_widget = self._get_table_widget(level)
             table_widget.populate(csv_data)
 
@@ -83,3 +89,36 @@ class MainController(QObject):
     @property
     def filepath(self) -> QFileInfo:
         return self.main_window.fileSelector.filepath
+
+    @Slot()
+    def on_open(self) -> None:
+        """ファイル選択ダイアログを開く"""
+        self.main_window.fileSelector.on_open()
+
+    @Slot()
+    def on_save_as(self) -> None:
+        """ファイルを別名で保存"""
+        if self.summary_sheet is None:
+            logger.warning("保存するデータがありません")
+            return
+
+        file_path, _ = QFileDialog.getSaveFileName(
+            self.main_window,
+            "CSVファイルを保存",
+            "",
+            "CSVファイル (*.csv);;すべてのファイル (*.*)",
+        )
+        if file_path:
+            try:
+                # 元のCSVデータを保存
+                from app.io.csv_handler import write_csv
+
+                write_csv(self.summary_sheet.csv_data, Path(file_path))
+                logger.info("ファイルを保存しました: %s", file_path)
+            except Exception:
+                logger.exception("ファイル保存に失敗しました: %s", file_path)
+
+    @Slot()
+    def on_exit(self) -> None:
+        """アプリケーションを終了"""
+        self.main_window.close()
