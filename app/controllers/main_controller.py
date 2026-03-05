@@ -102,15 +102,29 @@ class MainController(QObject):
 
     @Slot()
     def on_save_as(self) -> None:
-        """ファイルを別名で保存"""
+        """名前を付けてCSVファイルを保存"""
         if self.summary_sheet is None:
             logger.warning("保存するデータがありません")
             return
 
+        # 入力されたCSVファイルのファイル名 (拡張子を除く)
+        input_csv_path = self.summary_sheet.csv_path
+        if input_csv_path:
+            input_file_stem = input_csv_path.stem
+        else:
+            input_file_stem = "summary"
+
+        # レベル名称
+        level = self.summary_sheet.display_level
+        level_name = f"#{level}レベル名"  # 例: #3レベル
+
+        # 保存先のファイル名 (例: 鋼材重量総括表_#3レベル.csv)
+        output_filename = f"{input_file_stem}_{level_name}.csv"
+
         file_path, _ = QFileDialog.getSaveFileName(
             self.main_window,
             "CSVファイルを保存",
-            "",
+            output_filename,
             "CSVファイル (*.csv);;すべてのファイル (*.*)",
         )
         if file_path:
