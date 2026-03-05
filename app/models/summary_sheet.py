@@ -103,6 +103,11 @@ class SummarySheet(NodeMixin):
         self._display_level = value
 
     @property
+    def csv_path(self) -> Path | None:
+        """CSV ファイルのパス"""
+        return self._csv_summary_data.csv_path
+
+    @property
     def csv_data(self) -> CSVData:
         """総括表CSVデータ"""
         # ヘッダー列 (材質, 形状, 寸法) を追加

@@ -1,8 +1,21 @@
+from pathlib import Path
+
 from app.models.csv_summary_data import CSVSummaryData
 
 
 def test_CSVSummaryData_load_from_csv_file(csv_summary_data: CSVSummaryData):
     assert isinstance(csv_summary_data, CSVSummaryData)
+
+
+def test_CSVSummaryData_load_from_csvでcsv_pathを保持(summary_csv_path: Path):
+    data = CSVSummaryData.load_from_csv(summary_csv_path)
+    assert data.csv_path == summary_csv_path
+
+
+def test_CSVSummaryData_rowsのみで作成した場合csv_pathはNone(csv_summary_data: CSVSummaryData):
+    # 引数の csv_path を省略してインスタンス生成
+    data = CSVSummaryData(csv_summary_data.rows)
+    assert data.csv_path is None
 
 
 def test_CSVSummaryData_行数および列数(csv_summary_data: CSVSummaryData):
