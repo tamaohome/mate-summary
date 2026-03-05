@@ -4,8 +4,9 @@ import logging
 from pathlib import Path
 
 from PySide6.QtCore import QFileInfo, QObject, Slot
-from PySide6.QtWidgets import QFileDialog
+from PySide6.QtWidgets import QFileDialog, QMessageBox
 
+from app.config import APP_NAME, APP_VERSION
 from app.models.summary_sheet import SummarySheet
 from app.views.components.summary_table_widget import SummaryTableWidget
 from app.views.main_window import MainWindow
@@ -32,6 +33,7 @@ class MainController(QObject):
         self.main_window.actionOpen.triggered.connect(self.on_open)
         self.main_window.actionSaveAs.triggered.connect(self.on_save_as)
         self.main_window.actionExit.triggered.connect(self.on_exit)
+        self.main_window.actionShowVersion.triggered.connect(self.on_show_version)
 
         # テーブルを全て初期化
         self._init_tables()
@@ -122,3 +124,9 @@ class MainController(QObject):
     def on_exit(self) -> None:
         """アプリケーションを終了"""
         self.main_window.close()
+
+    @Slot()
+    def on_show_version(self) -> None:
+        """バージョン情報ダイアログを表示"""
+        message = f"{APP_NAME}\nバージョン {APP_VERSION}"
+        QMessageBox.information(self.main_window, "バージョン情報", message)
