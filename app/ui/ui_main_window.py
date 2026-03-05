@@ -11,13 +11,14 @@
 from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
     QMetaObject, QObject, QPoint, QRect,
     QSize, QTime, QUrl, Qt)
-from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
-    QFont, QFontDatabase, QGradient, QIcon,
-    QImage, QKeySequence, QLinearGradient, QPainter,
-    QPalette, QPixmap, QRadialGradient, QTransform)
+from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
+    QCursor, QFont, QFontDatabase, QGradient,
+    QIcon, QImage, QKeySequence, QLinearGradient,
+    QPainter, QPalette, QPixmap, QRadialGradient,
+    QTransform)
 from PySide6.QtWidgets import (QAbstractItemView, QApplication, QHeaderView, QMainWindow,
-    QMenuBar, QSizePolicy, QStatusBar, QTabWidget,
-    QTableWidgetItem, QVBoxLayout, QWidget)
+    QMenu, QMenuBar, QSizePolicy, QStatusBar,
+    QTabWidget, QTableWidgetItem, QVBoxLayout, QWidget)
 
 from app.views.components.file_selector import FileSelector
 from app.views.components.summary_table_widget import SummaryTableWidget
@@ -29,6 +30,14 @@ class Ui_MainWindow(object):
         MainWindow.resize(640, 360)
         MainWindow.setDocumentMode(True)
         MainWindow.setTabShape(QTabWidget.TabShape.Rounded)
+        self.actionOpen = QAction(MainWindow)
+        self.actionOpen.setObjectName(u"actionOpen")
+        self.actionSaveAs = QAction(MainWindow)
+        self.actionSaveAs.setObjectName(u"actionSaveAs")
+        self.actionExit = QAction(MainWindow)
+        self.actionExit.setObjectName(u"actionExit")
+        self.actionShowVersion = QAction(MainWindow)
+        self.actionShowVersion.setObjectName(u"actionShowVersion")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.centralLayout = QVBoxLayout(self.centralwidget)
@@ -107,11 +116,21 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 640, 24))
+        self.fileMenu = QMenu(self.menubar)
+        self.fileMenu.setObjectName(u"fileMenu")
+        self.helpMenu = QMenu(self.menubar)
+        self.helpMenu.setObjectName(u"helpMenu")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
         MainWindow.setStatusBar(self.statusbar)
+
+        self.menubar.addAction(self.fileMenu.menuAction())
+        self.menubar.addAction(self.helpMenu.menuAction())
+        self.fileMenu.addAction(self.actionOpen)
+        self.fileMenu.addAction(self.actionSaveAs)
+        self.fileMenu.addAction(self.actionExit)
+        self.helpMenu.addAction(self.actionShowVersion)
 
         self.retranslateUi(MainWindow)
 
@@ -123,9 +142,24 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
+        self.actionOpen.setText(QCoreApplication.translate("MainWindow", u"\u958b\u304f...", None))
+#if QT_CONFIG(shortcut)
+        self.actionOpen.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+O", None))
+#endif // QT_CONFIG(shortcut)
+        self.actionSaveAs.setText(QCoreApplication.translate("MainWindow", u"\u4fdd\u5b58...", None))
+#if QT_CONFIG(shortcut)
+        self.actionSaveAs.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+S", None))
+#endif // QT_CONFIG(shortcut)
+        self.actionExit.setText(QCoreApplication.translate("MainWindow", u"\u7d42\u4e86", None))
+#if QT_CONFIG(shortcut)
+        self.actionExit.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+Q", None))
+#endif // QT_CONFIG(shortcut)
+        self.actionShowVersion.setText(QCoreApplication.translate("MainWindow", u"\u30d0\u30fc\u30b8\u30e7\u30f3\u60c5\u5831...", None))
         self.levelTabWidget.setTabText(self.levelTabWidget.indexOf(self.level1Tab), QCoreApplication.translate("MainWindow", u"#1\u30ec\u30d9\u30eb", None))
         self.levelTabWidget.setTabText(self.levelTabWidget.indexOf(self.level2Tab), QCoreApplication.translate("MainWindow", u"#2\u30ec\u30d9\u30eb", None))
         self.levelTabWidget.setTabText(self.levelTabWidget.indexOf(self.level3Tab), QCoreApplication.translate("MainWindow", u"#3\u30ec\u30d9\u30eb", None))
         self.levelTabWidget.setTabText(self.levelTabWidget.indexOf(self.level4Tab), QCoreApplication.translate("MainWindow", u"#4\u30ec\u30d9\u30eb", None))
+        self.fileMenu.setTitle(QCoreApplication.translate("MainWindow", u"\u30d5\u30a1\u30a4\u30eb", None))
+        self.helpMenu.setTitle(QCoreApplication.translate("MainWindow", u"\u30d8\u30eb\u30d7", None))
     # retranslateUi
 

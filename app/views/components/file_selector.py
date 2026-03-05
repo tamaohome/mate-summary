@@ -1,4 +1,4 @@
-from PySide6.QtCore import QFileInfo, Signal
+from PySide6.QtCore import QFileInfo, Signal, Slot
 from PySide6.QtWidgets import QFileDialog, QWidget
 
 from app.ui.ui_file_selector import Ui_FileSelector
@@ -14,12 +14,13 @@ class FileSelector(QWidget, Ui_FileSelector):
         self.setupUi(self)
 
         # シグナル接続
-        self.browsePushButton.clicked.connect(self._on_browse_clicked)
+        self.browsePushButton.clicked.connect(self.on_open)
         self.pathLineEdit.textChanged.connect(lambda text: self.pathChanged.emit(text))
 
-    def _on_browse_clicked(self) -> None:
-        """ファイル選択ダイアログを表示し、結果を反映させる"""
-        fp, _ = QFileDialog.getOpenFileName(self, "ファイルを選択", "", "CSV Files (*.csv)")
+    @Slot()
+    def on_open(self) -> None:
+        """ファイル選択ダイアログを開く"""
+        fp, _ = QFileDialog.getOpenFileName(self, "CSVファイルを選択", "", "CSV Files (*.csv)")
         if fp:
             self.filepath = fp
 
