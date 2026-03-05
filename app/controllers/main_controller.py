@@ -35,6 +35,9 @@ class MainController(QObject):
         self.main_window.actionExit.triggered.connect(self.on_exit)
         self.main_window.actionShowVersion.triggered.connect(self.on_show_version)
 
+        # ボタンアクション接続
+        self.main_window.saveButton.clicked.connect(self.on_save_as)
+
         # テーブルを全て初期化
         self._init_tables()
 
