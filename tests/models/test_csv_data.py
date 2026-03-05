@@ -8,6 +8,12 @@ def test_CSVData_load_from_csv(summary_csv_path: Path):
     assert isinstance(csv_data, CSVData)
 
 
+def test_CSVData_load_from_csvでcsv_pathを保持(summary_csv_path: Path):
+    """load_from_csv で読み込んだ場合、csv_path が保持される"""
+    csv_data = CSVData.load_from_csv(summary_csv_path)
+    assert csv_data.csv_path == summary_csv_path
+
+
 def test_CSVData_行数および列数(csv_data: CSVData):
     # CSVデータの行数
     assert len(csv_data.rows) == 102

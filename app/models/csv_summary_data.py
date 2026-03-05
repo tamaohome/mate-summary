@@ -10,16 +10,17 @@ from app.models.csv_data import CSVData
 class CSVSummaryData(CSVData):
     """CSV総括表データを格納するクラス"""
 
-    def __init__(self, rows: list[CSVRow]):
-        super().__init__(rows)
+    def __init__(self, rows: list[CSVRow], csv_path: Path | None = None):
+        super().__init__(rows, csv_path)
         self.sheets = self._parse_sheets()
 
     @staticmethod
     def load_from_csv(csv_path: str | Path) -> CSVSummaryData:
         """CSVファイルからインスタンスを生成する"""
-        reader = CSVReader(csv_path)
+        path = Path(csv_path)
+        reader = CSVReader(path)
         rows = reader.load()
-        return CSVSummaryData(rows)
+        return CSVSummaryData(rows, path)
 
     def _parse_sheets(self) -> list[CSVData]:
         """`CSVData` をヘッダーごとに分割したシートを生成"""

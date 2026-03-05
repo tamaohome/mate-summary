@@ -11,9 +11,15 @@ from app.io.csv_reader import CSVColumn, CSVReader, CSVRow
 class CSVData(Sequence[CSVRow]):
     """CSVデータを格納するクラス"""
 
-    def __init__(self, rows: list[CSVRow]):
+    def __init__(self, rows: list[CSVRow], csv_path: Path | None = None):
         self.cols: Final = self._rows_to_cols(rows)
         self.rows: Final = self._cols_to_rows(self.cols)
+        self._csv_path = Path(csv_path) if csv_path is not None else None
+
+    @property
+    def csv_path(self) -> Path | None:
+        """CSVファイルのパス"""
+        return self._csv_path
 
     def __getitem__(self, index):
         return self.rows[index]
@@ -24,9 +30,10 @@ class CSVData(Sequence[CSVRow]):
     @staticmethod
     def load_from_csv(csv_path: str | Path) -> CSVData:
         """CSVファイルからインスタンスを生成する"""
-        reader = CSVReader(csv_path)
+        path = Path(csv_path)
+        reader = CSVReader(path)
         rows = reader.load()
-        return CSVData(rows)
+        return CSVData(rows, path)
 
     def _rows_to_cols(self, rows: list[CSVRow]) -> list[CSVColumn]:
         cols: list[CSVColumn] = []

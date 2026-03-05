@@ -5,6 +5,10 @@ def test_SummarySheet(summary_sheet: SummarySheet):
     assert len(summary_sheet.cols) == 11
 
 
+def test_SummarySheet_csv_pathを取得(summary_sheet: SummarySheet, summary_csv_path):
+    assert summary_sheet.csv_path == summary_csv_path
+
+
 def test_SummarySheet_レベル毎の列リストを取得(summary_sheet: SummarySheet):
     # レベル毎の列リストを取得
     level_1_cols = summary_sheet.cols_by_level[1]
