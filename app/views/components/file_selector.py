@@ -13,14 +13,20 @@ class FileSelector(QWidget, Ui_FileSelector):
         super().__init__(parent)
         self.setupUi(self)
 
+        self._initial_dir = ""
+
         # シグナル接続
         self.browsePushButton.clicked.connect(self.on_open)
         self.pathLineEdit.textChanged.connect(lambda text: self.pathChanged.emit(text))
 
+    def set_initial_dir(self, initial_dir: str) -> None:
+        """ファイル選択ダイアログの初期ディレクトリを設定する"""
+        self._initial_dir = initial_dir
+
     @Slot()
     def on_open(self) -> None:
         """ファイル選択ダイアログを開く"""
-        fp, _ = QFileDialog.getOpenFileName(self, "CSVファイルを選択", "", "CSV Files (*.csv)")
+        fp, _ = QFileDialog.getOpenFileName(self, "CSVファイルを選択", self._initial_dir, "CSV Files (*.csv)")
         if fp:
             self.filepath = fp
 

@@ -26,6 +26,10 @@ class MainController(QObject):
         # ウィンドウ状態を復元
         self.restore_window()
 
+        # 最後に開いたディレクトリを復元
+        last_dir = str(self.window_settings.get_last_dir())
+        self.main_window.fileSelector.set_initial_dir(last_dir)
+
         # 初期化処理
         self._setup()
 
@@ -57,7 +61,13 @@ class MainController(QObject):
     @Slot(str)
     def on_path_changed(self, filepath: str) -> None:
         """`FileSelector` のパス変更ハンドラ"""
+        # テーブルを全て更新
         self._update_tables()
+
+        # 最後に開いたディレクトリを保存
+        last_dir = Path(filepath).parent
+        self.window_settings.save_last_dir(last_dir)
+
         logger.info("選択パスが変更されました: %s", filepath)
 
     @Slot()
