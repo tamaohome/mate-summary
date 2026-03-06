@@ -4,12 +4,14 @@ import logging
 from pathlib import Path
 
 from PySide6.QtCore import QFileInfo, QObject, Slot
+from PySide6.QtGui import QCloseEvent
 from PySide6.QtWidgets import QFileDialog, QMessageBox
 
 from app.config import APP_NAME, APP_VERSION
 from app.models.summary_sheet import SummarySheet
 from app.views.components.summary_table_widget import SummaryTableWidget
 from app.views.main_window import MainWindow
+from app.views.settings import WindowSettings
 
 LEVELS = [1, 2, 3, 4]
 logger = logging.getLogger(__name__)
@@ -19,9 +21,15 @@ class MainController(QObject):
     def __init__(self, main_window: MainWindow, data_dir: Path | None = None) -> None:
         super().__init__(main_window)
         self.main_window = main_window
+        self.window_settings = WindowSettings()
+
+        # ウィンドウ状態を復元
+        self.restore_window()
+
+        # 初期化処理
         self._setup()
 
-        # 状態変数
+        # 状態変数を宣言
         self.summary_sheet: SummarySheet | None = None
 
     @property
@@ -35,6 +43,16 @@ class MainController(QObject):
             logger.info("初期パスを設定しました: %s", filepath)
         except Exception:
             logger.exception("初期パスの適用に失敗しました: %s", filepath)
+
+    def save_window(self) -> None:
+        """ウィンドウの位置と状態を保存"""
+        self.window_settings.save_window_state(self.main_window)
+        logger.info("ウィンドウ状態を保存しました")
+
+    def restore_window(self) -> None:
+        """ウィンドウの位置と状態を復元"""
+        self.window_settings.restore_window_state(self.main_window)
+        logger.info("ウィンドウ状態を復元しました")
 
     @Slot(str)
     def on_path_changed(self, filepath: str) -> None:
@@ -87,6 +105,7 @@ class MainController(QObject):
     @Slot()
     def on_exit(self) -> None:
         """アプリケーションを終了"""
+        self.save_window()
         self.main_window.close()
 
     @Slot()
@@ -109,8 +128,16 @@ class MainController(QObject):
         # ボタンアクション接続
         self.main_window.saveButton.clicked.connect(self.on_save_as)
 
+        # ウィンドウ終了イベントにウィンドウ状態保存をフック
+        self.main_window.closeEvent = self._handle_close_event
+
         # テーブルを全て初期化
         self._init_tables()
+
+    def _handle_close_event(self, event: QCloseEvent) -> None:
+        """ウィンドウ終了イベント"""
+        self.save_window()
+        event.accept()
 
     def _init_tables(self) -> None:
         """テーブルを全て初期化"""
