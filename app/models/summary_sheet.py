@@ -11,7 +11,6 @@ from typing import Final, overload, override
 from anytree import NodeMixin
 
 from app.io.csv_reader import CSVColumn, CSVRow
-from app.models.csv_data import CSVData
 from app.models.csv_summary_data import CSVSummaryData
 
 HEADER_COL_NAMES = ["材質", "形状", "寸法"]
@@ -108,7 +107,7 @@ class SummarySheet(NodeMixin):
         return self._csv_summary_data.csv_path
 
     @property
-    def csv_data(self) -> CSVData:
+    def csv_data(self) -> CSVSummaryData:
         """総括表CSVデータ"""
         # ヘッダー列 (材質, 形状, 寸法) を追加
         # CSVRow のコピーを作成して header_rows への参照を防止
@@ -127,7 +126,7 @@ class SummarySheet(NodeMixin):
                 cell = summary_col.csv_col[i]
                 current_row.append(cell)
 
-        return CSVData(csv_rows)
+        return CSVSummaryData(csv_rows, self.csv_path)
 
     def _parse_summary_columns(self) -> None:
         """総括表列を生成する"""
