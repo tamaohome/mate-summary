@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 from pathlib import Path
 
-from PySide6.QtCore import QFileInfo, QObject, Slot
+from PySide6.QtCore import QObject, Slot
 from PySide6.QtGui import QCloseEvent
 from PySide6.QtWidgets import QFileDialog, QMessageBox
 
@@ -37,7 +37,7 @@ class MainController(QObject):
         self.summary_sheet: SummarySheet | None = None
 
     @property
-    def filepath(self) -> QFileInfo:
+    def filepath(self) -> Path:
         return self.main_window.fileSelector.filepath
 
     def set_initial_path(self, filepath: str) -> None:
@@ -175,8 +175,7 @@ class MainController(QObject):
 
     def _update_tables(self) -> None:
         """テーブルを全て更新する"""
-        csv_filepath = Path(self.filepath.absoluteFilePath())
-        self.summary_sheet = SummarySheet.load_from_csv(csv_filepath)
+        self.summary_sheet = SummarySheet.load_from_csv(self.filepath)
 
         # レベル毎にシートをセット
         for level in LEVELS:

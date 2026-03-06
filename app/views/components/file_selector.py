@@ -1,4 +1,6 @@
-from PySide6.QtCore import QFileInfo, Signal, Slot
+from pathlib import Path
+
+from PySide6.QtCore import Signal, Slot
 from PySide6.QtWidgets import QFileDialog, QWidget
 
 from app.ui.ui_file_selector import Ui_FileSelector
@@ -31,16 +33,15 @@ class FileSelector(QWidget, Ui_FileSelector):
             self.filepath = fp
 
     @property
-    def filepath(self) -> QFileInfo:
+    def filepath(self) -> Path:
         """選択中のパスを返す"""
-        return QFileInfo(self.pathLineEdit.text())
+        return Path(self.pathLineEdit.text())
 
     @filepath.setter
-    def filepath(self, value: QFileInfo | str) -> None:
+    def filepath(self, value: Path | str) -> None:
         """パスを設定し、外部へシグナルを通知する"""
-        fi = value if isinstance(value, QFileInfo) else QFileInfo(value)
-        filepath = fi.filePath()
+        path_str = str(value)
         # 変更がない場合はシグナルを発行しない
-        if self.pathLineEdit.text() == filepath:
+        if self.pathLineEdit.text() == path_str:
             return
-        self.pathLineEdit.setText(filepath)
+        self.pathLineEdit.setText(path_str)
