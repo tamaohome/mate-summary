@@ -7,7 +7,7 @@ from PySide6.QtCore import QObject, Slot
 from PySide6.QtGui import QCloseEvent
 from PySide6.QtWidgets import QFileDialog, QMessageBox
 
-from app.config import APP_NAME, APP_VERSION
+from app.config import APP_NAME_JP, APP_VERSION
 from app.models.summary_sheet import SummarySheet
 from app.views.components.summary_table_widget import SummaryTableWidget
 from app.views.main_window import MainWindow
@@ -121,7 +121,7 @@ class MainController(QObject):
     @Slot()
     def on_show_version(self) -> None:
         """バージョン情報ダイアログを表示"""
-        message = f"{APP_NAME}\nバージョン {APP_VERSION}"
+        message = f"{APP_NAME_JP}\nバージョン {APP_VERSION}"
         QMessageBox.information(self.main_window, "バージョン情報", message)
 
     def _setup(self) -> None:

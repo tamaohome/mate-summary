@@ -6,6 +6,7 @@ from collections.abc import Sequence
 
 from PySide6.QtWidgets import QApplication
 
+from app.config import APP_NAME
 from app.controllers.main_controller import MainController
 from app.views.main_window import MainWindow
 
@@ -19,6 +20,7 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     try:
         app = QApplication(sys.argv)
+        app.setApplicationName(APP_NAME)
         window = MainWindow()
         controller = MainController(window)
         window.show()
