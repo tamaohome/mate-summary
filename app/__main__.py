@@ -21,6 +21,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     try:
         app = QApplication(sys.argv)
         app.setApplicationName(APP_NAME)
+        app.setStyle("Fusion")
+
         window = MainWindow()
         controller = MainController(window)
         window.show()

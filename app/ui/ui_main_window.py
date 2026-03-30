@@ -57,7 +57,7 @@ class Ui_MainWindow(object):
         self.levelTabWidget = QTabWidget(self.centralwidget)
         self.levelTabWidget.setObjectName(u"levelTabWidget")
         self.levelTabWidget.setTabPosition(QTabWidget.TabPosition.South)
-        self.levelTabWidget.setTabShape(QTabWidget.TabShape.Triangular)
+        self.levelTabWidget.setTabShape(QTabWidget.TabShape.Rounded)
         self.levelTabWidget.setDocumentMode(True)
         self.level1Tab = QWidget()
         self.level1Tab.setObjectName(u"level1Tab")
@@ -120,11 +120,12 @@ class Ui_MainWindow(object):
         icon = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.DocumentSaveAs))
         self.saveButton.setIcon(icon)
 
-        self.centralLayout.addWidget(self.saveButton, 0, Qt.AlignCenter)
+        self.centralLayout.addWidget(self.saveButton)
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
+        self.menubar.setGeometry(QRect(0, 0, 640, 22))
         self.fileMenu = QMenu(self.menubar)
         self.fileMenu.setObjectName(u"fileMenu")
         self.helpMenu = QMenu(self.menubar)
