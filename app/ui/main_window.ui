@@ -20,8 +20,8 @@
    <enum>QTabWidget::TabShape::Rounded</enum>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="centralLayout">
-    <item>
+   <layout class="QGridLayout" name="centralLayout">
+    <item row="0" column="0">
      <widget class="FileSelector" name="fileSelector" native="true">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
@@ -37,7 +37,7 @@
       </property>
      </widget>
     </item>
-    <item>
+    <item row="1" column="0">
      <widget class="QTabWidget" name="levelTabWidget">
       <property name="tabPosition">
        <enum>QTabWidget::TabPosition::South</enum>
@@ -169,7 +169,7 @@
       </widget>
      </widget>
     </item>
-    <item>
+    <item row="1" column="0" alignment="Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignBottom">
      <widget class="QPushButton" name="saveButton">
       <property name="maximumSize">
        <size>

@@ -16,10 +16,10 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QIcon, QImage, QKeySequence, QLinearGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
-from PySide6.QtWidgets import (QAbstractItemView, QApplication, QHeaderView, QMainWindow,
-    QMenu, QMenuBar, QPushButton, QSizePolicy,
-    QStatusBar, QTabWidget, QTableWidgetItem, QVBoxLayout,
-    QWidget)
+from PySide6.QtWidgets import (QAbstractItemView, QApplication, QGridLayout, QHeaderView,
+    QMainWindow, QMenu, QMenuBar, QPushButton,
+    QSizePolicy, QStatusBar, QTabWidget, QTableWidgetItem,
+    QVBoxLayout, QWidget)
 
 from app.views.components.file_selector import FileSelector
 from app.views.components.summary_table_widget import SummaryTableWidget
@@ -41,7 +41,7 @@ class Ui_MainWindow(object):
         self.actionShowVersion.setObjectName(u"actionShowVersion")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
-        self.centralLayout = QVBoxLayout(self.centralwidget)
+        self.centralLayout = QGridLayout(self.centralwidget)
         self.centralLayout.setObjectName(u"centralLayout")
         self.fileSelector = FileSelector(self.centralwidget)
         self.fileSelector.setObjectName(u"fileSelector")
@@ -52,7 +52,7 @@ class Ui_MainWindow(object):
         self.fileSelector.setSizePolicy(sizePolicy)
         self.fileSelector.setMaximumSize(QSize(16777215, 40))
 
-        self.centralLayout.addWidget(self.fileSelector)
+        self.centralLayout.addWidget(self.fileSelector, 0, 0, 1, 1)
 
         self.levelTabWidget = QTabWidget(self.centralwidget)
         self.levelTabWidget.setObjectName(u"levelTabWidget")
@@ -112,7 +112,7 @@ class Ui_MainWindow(object):
 
         self.levelTabWidget.addTab(self.level4Tab, "")
 
-        self.centralLayout.addWidget(self.levelTabWidget)
+        self.centralLayout.addWidget(self.levelTabWidget, 1, 0, 1, 1)
 
         self.saveButton = QPushButton(self.centralwidget)
         self.saveButton.setObjectName(u"saveButton")
@@ -120,7 +120,7 @@ class Ui_MainWindow(object):
         icon = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.DocumentSaveAs))
         self.saveButton.setIcon(icon)
 
-        self.centralLayout.addWidget(self.saveButton)
+        self.centralLayout.addWidget(self.saveButton, 1, 0, 1, 1, Qt.AlignRight|Qt.AlignBottom)
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
