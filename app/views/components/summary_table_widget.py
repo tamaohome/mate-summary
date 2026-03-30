@@ -16,7 +16,7 @@ class SummaryTableWidget(QTableWidget):
         """CSVデータをテーブルに設定する"""
         self.setColumnCount(len(csv_data.header))
         self.setHorizontalHeaderLabels(csv_data.header)
-        self.setRowCount(len(csv_data))
+        self.setRowCount(len(csv_data.data))
         # セルフォントを定義
         cell_font = QFont("ＭＳ ゴシック")
 
