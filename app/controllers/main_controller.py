@@ -17,6 +17,22 @@ LEVELS = [1, 2, 3, 4]
 logger = logging.getLogger(__name__)
 
 
+class StatusBarLogHandler(logging.Handler):
+    """ログメッセージをステータスバーに表示するハンドラ"""
+
+    def __init__(self, main_window: MainWindow) -> None:
+        super().__init__()
+        self._main_window = main_window
+
+    def emit(self, record: logging.LogRecord) -> None:
+        try:
+            message = self.format(record)
+        except Exception:
+            self.handleError(record)
+            return
+        self._main_window.statusbar.showMessage(message)
+
+
 class MainController(QObject):
     def __init__(self, main_window: MainWindow, data_dir: Path | None = None) -> None:
         super().__init__(main_window)
@@ -35,6 +51,7 @@ class MainController(QObject):
 
         # 状態変数を宣言
         self.summary_sheet: SummarySheet | None = None
+        self._statusbar_log_handler: StatusBarLogHandler | None = None
 
     @property
     def filepath(self) -> Path:
@@ -44,7 +61,6 @@ class MainController(QObject):
         """外部から初期ファイルパスを設定する"""
         try:
             self.main_window.fileSelector.filepath = filepath
-            logger.info("初期パスを設定しました: %s", filepath)
         except Exception:
             logger.exception("初期パスの適用に失敗しました: %s", filepath)
 
@@ -68,7 +84,7 @@ class MainController(QObject):
         last_dir = Path(filepath).parent
         self.window_settings.save_last_dir(last_dir)
 
-        logger.info("選択パスが変更されました: %s", filepath)
+        logger.info("ファイルを開きました: %s", filepath)
 
     @Slot()
     def on_open(self) -> None:
@@ -126,6 +142,8 @@ class MainController(QObject):
 
     def _setup(self) -> None:
         """シグナル接続と初期化処理を行う"""
+        self._setup_statusbar_logging()
+
         # シグナル接続
         self.main_window.fileSelector.pathChanged.connect(self.on_path_changed)
 
@@ -143,6 +161,23 @@ class MainController(QObject):
 
         # テーブルを全て初期化
         self._init_tables()
+
+    def _setup_statusbar_logging(self) -> None:
+        """ログ出力の最新メッセージをステータスバーへ表示する"""
+        root_logger = logging.getLogger()
+
+        # 多重登録を防止
+        for handler in root_logger.handlers:
+            if isinstance(handler, StatusBarLogHandler):
+                self._statusbar_log_handler = handler
+                break
+        else:
+            self._statusbar_log_handler = StatusBarLogHandler(self.main_window)
+            self._statusbar_log_handler.setLevel(logging.INFO)
+            self._statusbar_log_handler.setFormatter(logging.Formatter("%(message)s"))
+            root_logger.addHandler(self._statusbar_log_handler)
+
+        self.main_window.statusbar.showMessage("準備完了")
 
     def _handle_close_event(self, event: QCloseEvent) -> None:
         """ウィンドウ終了イベント"""
