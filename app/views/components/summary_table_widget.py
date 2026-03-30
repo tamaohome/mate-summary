@@ -1,4 +1,5 @@
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QFont
 from PySide6.QtWidgets import QTableWidget, QTableWidgetItem, QWidget
 
 from app.models.csv_data import CSVData
@@ -15,9 +16,14 @@ class SummaryTableWidget(QTableWidget):
         self.setColumnCount(len(csv_data.header))
         self.setHorizontalHeaderLabels(csv_data.header)
         self.setRowCount(len(csv_data))
+        # セルフォントを定義
+        cell_font = QFont("ＭＳ ゴシック")
+
         for r, row in enumerate(csv_data.data):
             for c, value in enumerate(row):
                 item = QTableWidgetItem(str(value))
+                # セルフォントを設定
+                item.setFont(cell_font)
                 # 4列目以降（インデックス3以上）は右揃えにする
                 if c >= 3:
                     alignment = Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter
