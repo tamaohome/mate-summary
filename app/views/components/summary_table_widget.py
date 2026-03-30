@@ -10,6 +10,7 @@ class SummaryTableWidget(QTableWidget):
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
+        self.verticalHeader().setVisible(False)
 
     def populate(self, csv_data: CSVData) -> None:
         """CSVデータをテーブルに設定する"""
