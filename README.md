@@ -10,32 +10,11 @@ JIP-まてりあるで出力した総括表CSVデータを読み込み、階層�
 - 階層レベル毎に変換結果をプレビュー表示
 - コマンドライン引数によるCSVファイル読み込みに対応
 
-## セットアップ
+## 使用方法
 
-### 必要環境
+1. [Releases](https://github.com/tamaohome/mate-summary/releases) より最新リリースのZIPファイルをダウンロードします。
 
-- Python 3.12以上
-- `uv`
-
-### 依存関係のインストール
-
-```bash
-uv sync
-```
-
-## 使い方
-
-### アプリの起動
-
-```bash
-uv run app
-```
-
-CSVファイルを起動時に開く場合は、ファイルパスを渡します。
-
-```bash
-uv run app "C:\\path\\to\\input.csv"
-```
+2. ZIP を任意のフォルダに展開して `MateSummary.exe` を起動します。
 
 ### 操作手順
 
@@ -52,3 +31,19 @@ uv run app "C:\\path\\to\\input.csv"
   - `ボルト本数総括表(現場).csv`
   - `メッキ総括表.csv`
   - `部材長さ総括表.csv`
+
+## ビルド方法（開発者向け）
+
+1. `uv` を導入します。
+
+2. 以下のコマンドで依存関係をインストールします。
+
+```pwsh
+uv sync
+```
+
+3. 以下のコマンドでビルドを開始します。
+
+```pwsh
+uv run pyinstaller mate-summary.spec
+```
