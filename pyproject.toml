@@ -3,9 +3,13 @@ name = "mate-summary"
 version = "0.1.0"
 description = "JIP-まてりある総括表変換ツール"
 readme = "README.md"
-license = {file = "LICENSE"}
+license = { file = "LICENSE" }
 requires-python = ">=3.12"
-dependencies = ["anytree>=2.13.0", "openpyxl>=3.1.5", "pyside6>=6.10.0"]
+dependencies = [
+    "anytree>=2.13.0",
+    "openpyxl>=3.1.5",
+    "pyside6-essentials>=6.11.0",
+]
 
 [tool.uv]
 managed = true
