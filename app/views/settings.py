@@ -6,7 +6,7 @@ from pathlib import Path
 from PySide6.QtCore import QSettings, QSize
 from PySide6.QtWidgets import QMainWindow
 
-INI_FILENAME = "matecon.ini"
+INI_FILENAME = "MateSummary.ini"
 DEFAULT_WINDOW_SIZE = QSize(680, 420)
 
 
